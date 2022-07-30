@@ -59,10 +59,6 @@ export default defineComponent({
     TransactionTable
   },
   setup() {
-    const accounts = ref<Account[]>([]);
-    const transactions = ref([]);
-    const month = ref('');
-    const title = ref('Tabela Vazia');
     const account = ref<Account>(
       {
         _id: '',
@@ -70,43 +66,47 @@ export default defineComponent({
         total: 0
       }
     );
+    const accounts = ref<Account[]>([]);
+    const month = ref('');
+    const title = ref('Tabela Vazia');
+    const transactions = ref([]);
 
-    return { account, accounts, month, title, transactions }
-  },
-  mounted() {
-    this.loadAccounts()
-  },
-  methods: {
-    clean() {
-      this.month = '';
-      this.account = {
+    //functions
+    const clean = () => {
+      month.value = '';
+      account.value = {
         _id: '',
         description: '',
         total: 0
       };
-    },
+    };
 
-    async loadAccounts() {
+    const loadAccounts = async () => {
       await accountService.getAccounts()
       .then(response => {
-        this.accounts = response.data;
+        accounts.value = response.data;
       })
       .catch(err => {
         console.log(err);
       })
-    },
+    };
 
-    async loadTransactions() {
-      await transactionService.getTransactions(this.account._id, this.month)
+    const loadTransactions = async () => {
+      await transactionService.getTransactions(account.value._id, month.value)
       .then(response => {
-        this.transactions = response.data;
-        this.title = this.account.description + ' - ' + this.month + '/2022';
-        this.clean();
+        transactions.value = response.data;
+        title.value = account.value.description + ' - ' + month.value + '/2022';
+        clean();
       })
       .catch(err => {
         console.log(err);
       })
-    }
+    };
+
+    return { account, accounts, clean, loadAccounts, loadTransactions, month, title, transactions }
+  },
+  mounted() {
+    this.loadAccounts();
   }
 });
 </script>
