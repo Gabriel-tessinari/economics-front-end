@@ -26,11 +26,13 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'TransactionTable',
   props: {
-    transactions: Array
+    transactions: {
+      required: true,
+      type: Array
+    }
   },
   methods: {
     isCredit(transaction: any): boolean {
-      console.log(transaction)
       return transaction.type == 'CREDIT';
     },
     valueFormat: (value: string) => {

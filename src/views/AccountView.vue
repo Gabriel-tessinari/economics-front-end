@@ -47,28 +47,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import TransactionTable from "@/components/AccountViewTransactionTable.vue";
 import transactionService from "@/services/transactions.service";
 import accountService from "@/services/accounts.service";
+import Account from '@/types/Account';
 
 export default defineComponent({
   name: 'AccountView',
   components: {
     TransactionTable
   },
-  data() {
-    return {
-      accounts: [],
-      transactions: [],
-      account: {
+  setup() {
+    const accounts = ref<Account[]>([]);
+    const transactions = ref([]);
+    const month = ref('');
+    const title = ref('Tabela Vazia');
+    const account = ref<Account>(
+      {
         _id: '',
         description: '',
         total: 0
-      },
-      month: '',
-      title: 'Tabela Vazia'
-    }
+      }
+    );
+
+    return { account, accounts, month, title, transactions }
   },
   mounted() {
     this.loadAccounts()
