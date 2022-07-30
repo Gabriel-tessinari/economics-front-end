@@ -43,10 +43,12 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
+@import '../assets/scss/global.scss';
+
   .credit {
-    color: #48C78E;
+    color: $green;
   }
   .debit {
-    color: #F14668;
+    color: $red;
   }
 </style>
