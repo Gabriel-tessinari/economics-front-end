@@ -50,12 +50,13 @@
         <div class="column is-half">
           <button class="button is-success is-fullwidth"
           @click="toggleAddModal()">
-            Adicionar Movimentação
+            Adicionar Transação
           </button>
         </div>
         <div class="column is-half">
           <button class="button is-success is-fullwidth"
-          :disabled="title == 'Tabela Vazia' || transactions.length == 0">
+          :disabled="title == 'Tabela Vazia' || transactions.length == 0"
+          @click="generateReport()">
             Gerar Relatório
           </button>
         </div>
@@ -132,7 +133,11 @@ export default defineComponent({
       showAddModal.value = !showAddModal.value;
     };
 
-    return { account, accounts, clean, loadAccounts, loadTransactions, month,
+    const generateReport = () => {
+      alert('Gera relatório.');
+    }
+
+    return { account, accounts, clean, generateReport, loadAccounts, loadTransactions, month,
     showAddModal, title, toggleAddModal, transactions }
   },
   mounted() {
