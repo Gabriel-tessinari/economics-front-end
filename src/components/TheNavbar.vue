@@ -2,7 +2,7 @@
   <nav class="navbar is-dark is-transparent is-expanded">
     <div class="navbar-brand">
       <a class="navbar-item" href="">
-        <img src="@/assets/logo.png" alt="Vue Logo" height="28">
+        <img src="@/assets/img/money.png" alt="Money image" height="28">
       </a>
       <div class="navbar-burger" data-target="menu">
         <span></span>
@@ -47,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<style>
-
+<style lang="scss">
+  .navbar {
+    margin-bottom: 1rem;
+  }
 </style>
