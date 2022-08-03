@@ -40,34 +40,59 @@
   </div>
   
   <div class="container">
-    <h1 class="title has-text-centered">{{title}}</h1>
+    <h1 class="title has-text-centered">
+      <div class="columns">
+        <div class="column is-one">
+          {{title}}
+        </div>
+      </div>
+      <div class="columns">
+        <div class="column is-half">
+          <button class="button is-success is-fullwidth"
+          @click="toggleAddModal()">
+            Adicionar Movimentação
+          </button>
+        </div>
+        <div class="column is-half">
+          <button class="button is-success is-fullwidth"
+          :disabled="title == 'Tabela Vazia' || transactions.length == 0">
+            Gerar Relatório
+          </button>
+        </div>
+      </div>
+    </h1>
+    
     <TransactionTable :transactions="transactions"
     v-if="transactions.length > 0"/>
   </div>
+
+  <AccountViewTransactionModal :accounts="accounts" :showModal="showAddModal"
+  @close="toggleAddModal()"/>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import TransactionTable from "@/components/AccountViewTransactionTable.vue";
+import AccountViewTransactionModal from "@/components/AccountViewTransactionModal.vue";
+import TransactionTable from "@/components/TheTransactionTable.vue";
 import transactionService from "@/services/transactions.service";
 import accountService from "@/services/accounts.service";
-import Account from '@/types/Account';
+import Account from "@/types/Account";
 
 export default defineComponent({
   name: 'AccountView',
   components: {
-    TransactionTable
+    TransactionTable,
+    AccountViewTransactionModal
   },
   setup() {
-    const account = ref<Account>(
-      {
-        _id: '',
-        description: '',
-        total: 0
-      }
-    );
+    const account = ref<Account>({
+      _id: '',
+      description: '',
+      total: 0
+    });
     const accounts = ref<Account[]>([]);
     const month = ref('');
+    const showAddModal = ref(false);
     const title = ref('Tabela Vazia');
     const transactions = ref([]);
 
@@ -103,7 +128,12 @@ export default defineComponent({
       })
     };
 
-    return { account, accounts, clean, loadAccounts, loadTransactions, month, title, transactions }
+    const toggleAddModal = () => {
+      showAddModal.value = !showAddModal.value;
+    };
+
+    return { account, accounts, clean, loadAccounts, loadTransactions, month,
+    showAddModal, title, toggleAddModal, transactions }
   },
   mounted() {
     this.loadAccounts();
@@ -111,9 +141,9 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="scss">
   .columns {
-    padding: 1rem;
+    padding: 0 1rem;
   }
 
   .is-invisible {
