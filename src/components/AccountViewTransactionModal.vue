@@ -58,7 +58,7 @@
           </div>
           <div class="column is-one-half">
             <label class="label">Valor</label>
-            <input class="input is-success" type="number" v-model="form.value">
+            <TheCurrencyInput v-model="form.value"/>
           </div>
         </div>
       </section>
@@ -72,6 +72,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
+import TheCurrencyInput from "./TheCurrencyInput.vue";
 import categoriesService from "@/services/categories.service";
 import transactionsService from "@/services/transactions.service";
 import Account from "@/types/Account";
@@ -80,6 +81,9 @@ import Transaction from "@/types/Transaction";
 
 export default defineComponent({
   name: 'AccountViewTransactionModal',
+  components: {
+    TheCurrencyInput
+  },
   props: {
     accounts: {
       required: true,
