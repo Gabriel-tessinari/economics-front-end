@@ -22,6 +22,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Transaction from '@/types/Transaction';
 
 export default defineComponent({
   name: 'TransactionTable',
@@ -32,7 +33,7 @@ export default defineComponent({
     }
   },
   methods: {
-    isCredit(transaction: any): boolean {
+    isCredit(transaction: Transaction): boolean {
       return transaction.type == 'CREDIT';
     },
     valueFormat: (value: string) => {

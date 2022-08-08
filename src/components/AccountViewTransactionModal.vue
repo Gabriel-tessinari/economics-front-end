@@ -27,7 +27,13 @@
         <div class="columns">
           <div class="column is-one-half">
             <label class="label">Categoria</label>
-            <input class="input is-success" type="text" placeholder="Select Categoria">
+            <div class="select is-success is-fullwidth">
+              <select v-model="form.categoryId">
+                <option v-for="element in categories" :key="element._id" :value="element._id">
+                  {{element.description}}
+                </option>
+              </select>
+            </div>
           </div>
           <div class="column is-one-half">
             <label class="label">Subcategoria</label>
@@ -52,7 +58,7 @@
           </div>
           <div class="column is-one-half">
             <label class="label">Valor</label>
-            <input class="input is-success" type="text" v-model="form.value">
+            <input class="input is-success" type="number" v-model="form.value">
           </div>
         </div>
       </section>
@@ -65,8 +71,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, toRef } from "vue";
+import { defineComponent, PropType, ref } from "vue";
+import categoriesService from "@/services/categories.service";
+import transactionsService from "@/services/transactions.service";
 import Account from "@/types/Account";
+import Category from "@/types/Category";
+import Transaction from "@/types/Transaction";
 
 export default defineComponent({
   name: 'AccountViewTransactionModal',
@@ -81,6 +91,7 @@ export default defineComponent({
     }
   },
   setup(props, { emit }) {
+    const categories = ref<Category[]>([]);
     const form = ref({
       accountId: '',
       date: '',
@@ -109,11 +120,49 @@ export default defineComponent({
       emit('close');
     };
 
-    const saveTransaction = () => {
-      alert('Salvar');
-    }
+    const loadCategories = async () => {
+      await categoriesService.getCategories()
+      .then(response => {
+        categories.value = response.data;
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    };
 
-    return { clean, close, form, saveTransaction }
+    const saveTransaction = async () => {
+      await transactionsService.saveTransaction(mapperRequest())
+      .then(() => {
+        alert('Salvo com sucesso.');
+        close();
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    };
+
+    const mapperRequest = (): Transaction => {
+      let subcategoryId: string | undefined = undefined;
+
+      if(form.value.subcategoryId != '') {
+        subcategoryId = form.value.subcategoryId;
+      }
+
+      return {
+        date: form.value.date,
+        description: form.value.description,
+        value: form.value.value,
+        type: form.value.type,
+        accountId: form.value.accountId,
+        categoryId: form.value.categoryId,
+        subcategoryId: subcategoryId
+      }
+    };
+
+    return { categories, clean, close, form, loadCategories, saveTransaction }
+  },
+  mounted() {
+    this.loadCategories();
   }
 });
 </script>
