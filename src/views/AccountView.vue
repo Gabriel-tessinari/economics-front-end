@@ -1,8 +1,9 @@
 <template>
+  <TheToast :show="toastShow" :severity="toastSeverity" :message="toastMessage"/>
   <div class="columns">
     <div class="column is-one-third">
       <label class="label">Conta</label>
-      <div class="select is-success is-fullwidth">
+      <div class="select is-primary is-fullwidth">
         <select v-model="account">
           <option v-for="element in accounts" :key="element._id" :value="element">
             {{element.description}}
@@ -12,7 +13,7 @@
     </div>
     <div class="column is-one-third">
       <label class="label">Mês</label>
-      <div class="select is-success is-fullwidth">
+      <div class="select is-primary is-fullwidth">
         <select v-model="month">
           <option value="01">Janeiro</option>
           <option value="02">Fevereiro</option>
@@ -31,7 +32,7 @@
     </div>
     <div class="column is-one-third">
       <label class="label is-invisible">*</label>
-      <button class="button is-success is-fullwidth"
+      <button class="button is-primary is-fullwidth"
       :disabled="account._id == '' || month == ''"
       @click="loadTransactions()">
         Carregar
@@ -48,13 +49,14 @@
       </div>
       <div class="columns">
         <div class="column is-half">
-          <button class="button is-success is-fullwidth"
+          <button class="button is-primary is-fullwidth"
+          :disabled="accounts.length == 0"
           @click="toggleAddModal()">
             Adicionar Transação
           </button>
         </div>
         <div class="column is-half">
-          <button class="button is-success is-fullwidth"
+          <button class="button is-primary is-fullwidth"
           :disabled="title == 'Tabela Vazia' || transactions.length == 0"
           @click="generateReport()">
             Gerar Relatório
@@ -73,6 +75,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import TheToast from "@/components/TheToast.vue";
 import AccountViewTransactionModal from "@/components/AccountViewTransactionModal.vue";
 import TransactionTable from "@/components/TheTransactionTable.vue";
 import transactionService from "@/services/transactions.service";
@@ -82,6 +85,7 @@ import Account from "@/types/Account";
 export default defineComponent({
   name: 'AccountView',
   components: {
+    TheToast,
     TransactionTable,
     AccountViewTransactionModal
   },
@@ -96,6 +100,9 @@ export default defineComponent({
     const showAddModal = ref(false);
     const title = ref('Tabela Vazia');
     const transactions = ref([]);
+    const toastMessage = ref('');
+    const toastSeverity = ref('');
+    const toastShow = ref(false);
 
     //functions
     const clean = () => {
@@ -107,6 +114,13 @@ export default defineComponent({
       };
     };
 
+    const showToast = (severity: string, message: string) => {
+      toastMessage.value = message;
+      toastSeverity.value = severity;
+      toastShow.value = true;
+      setTimeout(() => toastShow.value = false, 5000);
+    }
+
     const loadAccounts = async () => {
       await accountService.getAccounts()
       .then(response => {
@@ -114,6 +128,7 @@ export default defineComponent({
       })
       .catch(err => {
         console.log(err);
+        showToast('error', 'Algo de errado ocorreu. Tente novamente.');
       })
     };
 
@@ -126,6 +141,7 @@ export default defineComponent({
       })
       .catch(err => {
         console.log(err);
+        showToast('error', 'Algo de errado ocorreu. Tente novamente.');
       })
     };
 
@@ -138,7 +154,7 @@ export default defineComponent({
     }
 
     return { account, accounts, clean, generateReport, loadAccounts, loadTransactions, month,
-    showAddModal, title, toggleAddModal, transactions }
+    showAddModal, showToast, title, toastMessage, toastSeverity, toastShow, toggleAddModal, transactions }
   },
   mounted() {
     this.loadAccounts();

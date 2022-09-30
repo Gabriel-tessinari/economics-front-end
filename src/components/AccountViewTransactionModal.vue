@@ -10,7 +10,7 @@
         <div class="columns">
           <div class="column is-one-half">
             <label class="label">Conta</label>
-            <div class="select is-success is-fullwidth">
+            <div class="select is-primary is-fullwidth">
               <select v-model="form.accountId">
                 <option v-for="element in accounts" :key="element._id" :value="element._id">
                   {{element.description}}
@@ -20,14 +20,14 @@
           </div>
           <div class="column is-one-half">
             <label class="label">Data</label>
-            <input class="input is-success" type="text" placeholder="DD/MM/AAAA"
+            <input class="input is-primary" type="text" placeholder="DD/MM/AAAA"
             v-model="form.date">
           </div>
         </div>
         <div class="columns">
           <div class="column is-one-half">
             <label class="label">Categoria</label>
-            <div class="select is-success is-fullwidth">
+            <div class="select is-primary is-fullwidth">
               <select v-model="form.categoryId">
                 <option v-for="element in categories" :key="element._id" :value="element._id">
                   {{element.description}}
@@ -37,19 +37,19 @@
           </div>
           <div class="column is-one-half">
             <label class="label">Subcategoria</label>
-            <input class="input is-success" type="text" placeholder="Select Subcategoria">
+            <input class="input is-primary" type="text" placeholder="Select Subcategoria">
           </div>
         </div>
         <div class="columns">
           <div class="column is-one">
             <label class="label">Descrição</label>
-            <input class="input is-success" type="text" v-model="form.description">
+            <input class="input is-primary" type="text" v-model="form.description">
           </div>
         </div>
         <div class="columns">
           <div class="column is-one-half">
             <label class="label">Tipo</label>
-            <div class="select is-success is-fullwidth">
+            <div class="select is-primary is-fullwidth">
               <select v-model="form.type">
                 <option value="DEBIT">Despesa</option>
                 <option value="CREDIT">Renda</option>
@@ -62,9 +62,9 @@
           </div>
         </div>
       </section>
-      <footer class="modal-card-foot">
-        <button class="button is-success" @click="saveTransaction()">Salvar</button>
+      <footer class="modal-card-foot" style="justify-content: end">
         <button class="button is-danger" @click="close()">Cancelar</button>
+        <button class="button is-success" @click="saveTransaction()">Salvar</button>
       </footer>
     </div>
   </div>

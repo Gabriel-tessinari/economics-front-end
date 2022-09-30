@@ -1,5 +1,5 @@
 <template>
-  <input class="input is-success" type="text" ref="inputRef">
+  <input class="input is-primary" type="text" ref="inputRef">
 </template>
 
 <script lang="ts">
