@@ -4,22 +4,7 @@
     <div class="column is-half">
       <div class="title">
         <p style="margin-bottom: 24px">Contas</p>
-        <div class="columns" style="padding: 0;">
-          <div class="column is-one-quarter" v-for="account in accounts" :key="account._id">
-            <div class="card">
-              <div class="card-content">
-                <div class="content">
-                  <p>{{account.description}}</p>
-                </div>
-              </div>
-              <footer class="card-footer" style="border-top: none">
-                <p :class="account.total < 0 ? 'is-red-color' : 'is-green-color'">
-                  R${{account.total}}
-                </p>
-              </footer>
-            </div>
-          </div>
-        </div>
+        <MainViewAccountsCards :accounts="accounts"/>
       </div>
     </div>
   </div>
@@ -28,13 +13,15 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import TheToast from "@/components/TheToast.vue";
+import MainViewAccountsCards from "@/components/MainViewAccountsCards.vue";
 import accountService from "@/services/accounts.service";
 import Account from '@/types/Account';
 
 export default defineComponent({
   name: 'MainView',
   components: {
-    TheToast
+    TheToast,
+    MainViewAccountsCards
   },
   setup() {
     const accounts = ref<Account[]>([]);
@@ -70,28 +57,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../assets/scss/global.scss';
 
-  .card {
-    border: 1px solid $black;
-
-    .card-content {
-      padding: .5rem;
-
-      p {
-        font-size: 1.5rem;
-        font-weight: bold;
-      }
-    }
-  }
-
-  .card-footer {
-    justify-content: end;
-    padding: .5rem;
-
-    p {
-      font-size: 1rem;
-      font-weight: bold;
-    }
-  }
 </style>

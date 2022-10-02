@@ -32,13 +32,17 @@ export default defineComponent({
       type: Array
     }
   },
-  methods: {
-    isCredit(transaction: Transaction): boolean {
+  setup() {
+    //functions
+    const isCredit = (transaction: Transaction): boolean => {
       return transaction.type == 'CREDIT';
-    },
-    valueFormat: (value: string) => {
+    }
+
+    const valueFormat = (value: string) => {
       return 'R$' + parseFloat(value).toFixed(2);
     }
+
+    return { isCredit, valueFormat }
   }
 });
 </script>
