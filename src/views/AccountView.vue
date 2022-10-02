@@ -163,18 +163,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-  .columns {
-    padding: 0 1rem;
-  }
-
-  .is-invisible {
-    color: transparent;
-  }
-
-  .title {
-    border: 1px solid black;
-    font-size: 1.5rem;
-    font-weight: 900;
-    padding: 1rem;
-  }
+  
 </style>

@@ -81,6 +81,6 @@ export default defineComponent({
   }
 
   .toast-success {
-    background: $cyan;
+    background: $green;
   }
 </style>

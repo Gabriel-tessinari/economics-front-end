@@ -10,7 +10,7 @@
     </thead>
     <tbody>
       <tr v-for="transaction in transactions" :key="transaction._id"
-      :class="isCredit(transaction) ? 'credit' : 'debit'">
+      :class="isCredit(transaction) ? 'is-green-color' : 'is-red-color'">
         <td>{{transaction.date}}</td>
         <td>{{transaction.description}}</td>
         <td>{{transaction.category.description}}</td>
@@ -44,12 +44,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../assets/scss/global.scss';
 
-  .credit {
-    color: $green;
-  }
-  .debit {
-    color: $red;
-  }
 </style>

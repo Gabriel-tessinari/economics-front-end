@@ -1,0 +1,15 @@
+@import "../../../node_modules/bulma/sass/utilities/initial-variables.sass";
+@import "../../../node_modules/bulma/sass/utilities/functions.sass";
+
+$blue: #476d96;
+$cyan: #62bad9;
+$green: #56b68b;
+$orange: #ff9e47;
+$purple: #7e6990;
+$red: #e96875;
+$yellow: #ffd06c;
+
+$primary: $orange;
+
+$family-serif: 'Nunito', sans-serif;
+$family-primary: $family-serif;

@@ -14,10 +14,10 @@
     <div class="navbar-menu" id="menu">
       <div class="navbar-start">
         <router-link class="navbar-item" to="/account">
-          Contas
+          Extrato Contas
         </router-link>
         <router-link class="navbar-item" to="/card">
-          Cartões
+          Fatura Cartões
         </router-link>
       </div>
     </div>

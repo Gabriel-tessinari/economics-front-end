@@ -1,0 +1,21 @@
+@import "./bulmaVariables.scss";
+@import '../../../node_modules/bulma/bulma.sass';
+
+.columns {
+  padding: 0 1rem;
+}
+
+.title {
+  border: 1px solid $black;
+  font-size: 1.5rem;
+  font-weight: 900;
+  padding: 1rem;
+}
+
+.is-green-color {
+  color: $green;
+}
+
+.is-red-color {
+  color: $red;
+}

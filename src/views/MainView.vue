@@ -13,7 +13,7 @@
                 </div>
               </div>
               <footer class="card-footer" style="border-top: none">
-                <p :class="account.total < 0 ? 'red' : 'green'">
+                <p :class="account.total < 0 ? 'is-red-color' : 'is-green-color'">
                   R${{account.total}}
                 </p>
               </footer>
@@ -73,7 +73,7 @@ export default defineComponent({
 @import '../assets/scss/global.scss';
 
   .card {
-    border: 1px solid black;
+    border: 1px solid $black;
 
     .card-content {
       padding: .5rem;
@@ -93,13 +93,5 @@ export default defineComponent({
       font-size: 1rem;
       font-weight: bold;
     }
-  }
-
-  .green {
-    color: $green;
-  }
-
-  .red {
-    color: $red;
   }
 </style>
