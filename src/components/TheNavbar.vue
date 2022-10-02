@@ -47,7 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
   .navbar {
     margin-bottom: 1rem;
   }

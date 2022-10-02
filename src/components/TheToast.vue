@@ -38,7 +38,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '@/assets/scss/global.scss';
 
   .toast-enter-active {

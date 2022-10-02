@@ -2,9 +2,15 @@
   <div class="columns" style="padding: 0;">
     <div class="column is-one-quarter" v-for="account in accounts" :key="account._id">
       <div class="card">
+        <header class="card-header">
+          <p class="card-header-title">{{account.description}}</p>
+          <button class="card-header-icon" @click="deleteAccount(account)">
+            <span class="icon material-symbols-rounded">delete</span>
+          </button>
+        </header>
         <div class="card-content">
           <div class="content">
-            <p>{{account.description}}</p>
+            <p>Último relatório gerado em 07/2022.</p>
           </div>
         </div>
         <footer class="card-footer" style="border-top: none">
@@ -26,6 +32,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Account from '@/types/Account';
 
 export default defineComponent ({
   name: "MainViewAccountsCards",
@@ -41,23 +48,36 @@ export default defineComponent ({
       return 'R$' + total.toFixed(2);
     }
 
-    return { totalFormat }
+    const deleteAccount = (account: Account) => {
+      alert('Deleta conta: ' + account._id);
+    };
+
+    return { deleteAccount, totalFormat }
   }
 })
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 @import '@/assets/scss/global.scss';
 
   .card {
     border: 1px solid $black;
 
+    .card-header-title {
+      font-size: 1rem;
+    }
+
+    .card-header-icon .icon {
+      color: $red;
+    }
+
     .card-content {
       padding: .5rem;
 
       p {
-        font-size: 1.5rem;
-        font-weight: bold;
+        font-size: 1rem;
+        font-style: italic;
+        font-weight: 400;
       }
     }
   }
