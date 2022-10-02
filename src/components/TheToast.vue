@@ -1,8 +1,16 @@
 <template>
   <transition name="toast">
     <div class="toast-wrapper" v-if="show">
-      <div class="toast" :class="severity == 'error' ? 'toast-error' : 'toast-success'">
-        {{message}}
+      <div class="toast" 
+      :class="severity == 'error' ? 'toast-error' : severity == 'success' ? 'toast-success' : 'toast-warning'">
+        <div class="toast-icon">
+          <span class="material-symbols-rounded" v-if="severity == 'error'">error</span>
+          <span class="material-symbols-rounded" v-if="severity == 'success'">check_circle</span>
+          <span class="material-symbols-rounded" v-if="severity == 'warning'">warning</span>
+        </div>
+        <div class="toast-message">
+          <p>{{message}}</p>
+        </div>
       </div>
     </div>
   </transition>
@@ -31,7 +39,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import '../assets/scss/global.scss';
+@import '@/assets/scss/global.scss';
 
   .toast-enter-active {
     animation: wobble 0.5s ease;
@@ -68,19 +76,49 @@ export default defineComponent({
   }
 
   .toast {
-    padding: 20px;
-    color: white;
+    border: 3px solid;
     border-radius: 4px;
-    box-shadow: 1px 3px 5px rgba(0,0,0,0.2);
-    max-width: 400px;
+    display: flex;
     margin: 0 auto;
+    max-width: 40%;
+    padding: 20px 20px 20px 0;
+
+    .toast-icon {
+      display: inline-block;
+      padding: 0 20px;
+
+      span {
+        font-size: 2rem;
+        vertical-align: middle;
+      }
+    }
+
+    .toast-message {
+      padding-top: 5px;
+    }
   }
 
   .toast-error {
-    background: $red;
+    background: $danger;
+    border-color: $danger-dark;
+    color: $danger-invert;
   }
 
   .toast-success {
-    background: $green;
+    background: $success;
+    border-color: $success-dark;
+    color: $success-invert;
+  }
+
+  .toast-warning {
+    background: $warning;
+    border-color: $warning-dark;
+    color: $warning-invert;
+  }
+
+  @media screen and (max-width: 768px) {
+    .toast {
+      max-width: 100%;
+    }
   }
 </style>
