@@ -1,7 +1,7 @@
 <template>
   <TheToast :show="toastShow" :severity="toastSeverity" :message="toastMessage"/>
   <div class="columns">
-    <div class="column is-half">
+    <div class="column is-half-desktop">
       <div class="title">
         <div class="columns">
           <div class="column is-full">
@@ -19,16 +19,13 @@
           </div>
           <div class="column is-one-third">
             <label class="label is-invisible">*</label>
-            <button class="button is-primary is-fullwidth" @click="createAccount()">
+            <button class="button is-primary is-fullwidth" @click="createAccount()"
+            :disabled="!accountForm.description || !accountForm.total">
               Adicionar
             </button>
           </div>
         </div>
-        <div class="columns">
-          <div class="column is-full">
-            <MainViewAccountsCards :accounts="accounts"/>
-          </div>
-        </div>
+        <MainViewAccountsCards :accounts="accounts"/>
       </div>
     </div>
   </div>

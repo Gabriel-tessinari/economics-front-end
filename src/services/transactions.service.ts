@@ -4,8 +4,8 @@ import api from './base';
 const route = '/transaction';
 
 export default {
-  getTransactions(account: string, month: string) {
-    return api().get(route + '/account/' + account + '/month/' + month);
+  getTransactions(account: string, month: string, year: string) {
+    return api().get(route + '/account/' + account + '/month/' + month + '/year/' + year);
   },
 
   saveTransaction(transaction: Transaction) {

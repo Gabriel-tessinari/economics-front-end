@@ -6,5 +6,17 @@
 @import '../../../node_modules/bulma/bulma.sass';
 
 body {
+  background: $background;
   font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+}
+
+//input
+.input {
+  background: $background;
+}
+
+//select
+.select > select {
+  background: $background;
 }

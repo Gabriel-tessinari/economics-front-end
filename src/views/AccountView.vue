@@ -1,7 +1,7 @@
 <template>
   <TheToast :show="toastShow" :severity="toastSeverity" :message="toastMessage"/>
   <div class="columns">
-    <div class="column is-one-third">
+    <div class="column is-one-quarter">
       <label class="label">Conta</label>
       <div class="select is-primary is-fullwidth">
         <select v-model="account">
@@ -11,7 +11,7 @@
         </select>
       </div>
     </div>
-    <div class="column is-one-third">
+    <div class="column is-one-quarter">
       <label class="label">Mês</label>
       <div class="select is-primary is-fullwidth">
         <select v-model="month">
@@ -30,10 +30,14 @@
         </select>
       </div>
     </div>
-    <div class="column is-one-third">
+    <div class="column is-one-quarter">
+      <label class="label">Ano</label>
+      <input class="input is-primary" type="text" v-model="year" placeholder="Ex.: 2022">
+    </div>
+    <div class="column is-one-quarter">
       <label class="label is-invisible">*</label>
       <button class="button is-primary is-fullwidth"
-      :disabled="account._id == '' || month == ''"
+      :disabled="account._id == '' || month == '' || year == ''"
       @click="loadTransactions()">
         Carregar
       </button>
@@ -97,6 +101,7 @@ export default defineComponent({
     });
     const accounts = ref<Account[]>([]);
     const month = ref('');
+    const year = ref('');
     const showAddModal = ref(false);
     const title = ref('Tabela Vazia');
     const transactions = ref([]);
@@ -107,6 +112,7 @@ export default defineComponent({
     //functions
     const clean = () => {
       month.value = '';
+      year.value = '';
       account.value = {
         _id: '',
         description: '',
@@ -133,10 +139,10 @@ export default defineComponent({
     };
 
     const loadTransactions = async () => {
-      await transactionService.getTransactions(account.value._id, month.value)
+      await transactionService.getTransactions(account.value._id, month.value, year.value)
       .then(response => {
         transactions.value = response.data;
-        title.value = account.value.description + ' - ' + month.value + '/2022';
+        title.value = account.value.description + ' - ' + month.value + '/' + year.value;
         clean();
       })
       .catch(err => {
@@ -154,7 +160,8 @@ export default defineComponent({
     }
 
     return { account, accounts, clean, generateReport, loadAccounts, loadTransactions, month,
-    showAddModal, showToast, title, toastMessage, toastSeverity, toastShow, toggleAddModal, transactions }
+    showAddModal, showToast, title, toastMessage, toastSeverity, toastShow, toggleAddModal, 
+    transactions, year }
   },
   mounted() {
     this.loadAccounts();

@@ -1,5 +1,5 @@
 <template>
-  <div class="columns" style="padding: 0;">
+  <div class="columns">
     <div class="column is-one-quarter" v-for="account in accounts" :key="account._id">
       <div class="card">
         <header class="card-header">
