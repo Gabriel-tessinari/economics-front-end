@@ -16,6 +16,7 @@
                   {{element.description}}
                 </option>
               </select>
+              <small v-if="accounts.length == 0">Erro ao carregar lista de contas.</small>
             </div>
           </div>
           <div class="column is-one-half">
@@ -33,6 +34,7 @@
                   {{element.description}}
                 </option>
               </select>
+              <small v-if="categories.length == 0">Erro ao carregar lista de categorias.</small>
             </div>
           </div>
           <div class="column is-one-half">
@@ -64,7 +66,8 @@
       </section>
       <footer class="modal-card-foot" style="justify-content: end">
         <button class="button is-danger" @click="close()">Cancelar</button>
-        <button class="button is-success" @click="saveTransaction()">Salvar</button>
+        <button class="button is-success" @click="saveTransaction()"
+        :disabled="!isReadyToSave()">Salvar</button>
       </footer>
     </div>
   </div>
@@ -134,6 +137,11 @@ export default defineComponent({
       })
     };
 
+    const isReadyToSave = () => {
+      return (form.value.accountId != '' && form.value.date != '' && form.value.categoryId != '' &&
+      form.value.description != '' && form.value.value > 0);
+    };
+
     const saveTransaction = async () => {
       await transactionsService.saveTransaction(mapperRequest())
       .then(() => {
@@ -142,6 +150,7 @@ export default defineComponent({
       })
       .catch(err => {
         console.log(err);
+        emit('error');
       })
     };
 
@@ -163,7 +172,7 @@ export default defineComponent({
       }
     };
 
-    return { categories, clean, close, form, loadCategories, saveTransaction }
+    return { categories, close, form, isReadyToSave, loadCategories, saveTransaction }
   },
   mounted() {
     this.loadCategories();
