@@ -30,7 +30,7 @@
       <div class="tile is-parent">
         <article class="tile is-child notification is-warning">
           <p class="title">Categorias</p>
-          <MainViewCategoryList :categories="categories" @error="(error) => showToast(error.severity, error.message)"/>
+          <MainViewCategoryList @error="(error) => showToast(error.severity, error.message)"/>
         </article>
       </div>
       <div class="tile is-parent">
@@ -49,9 +49,7 @@ import TheToast from "@/components/TheToast.vue";
 import MainViewAccountsCards from "@/components/MainViewAccountsCards.vue";
 import MainViewCategoryList from "@/components/MainViewCategoryList.vue";
 import accountService from "@/services/accounts.service";
-import categoriesService from '@/services/categories.service';
 import Account from '@/types/Account';
-import Category from '@/types/Category';
 
 export default defineComponent({
   name: 'MainView',
@@ -67,7 +65,6 @@ export default defineComponent({
       description: '',
       total: 0
     });
-    const categories = ref<Category[]>([]);
     const toastMessage = ref('');
     const toastSeverity = ref('');
     const toastShow = ref(false);
@@ -103,23 +100,11 @@ export default defineComponent({
       })
     };
 
-    const loadCategories = async () => {
-      await categoriesService.getCategories()
-      .then(response => {
-        categories.value = response.data;
-      })
-      .catch(err => {
-        console.log(err);
-        showToast('error', 'Algo de errado ocorreu. Tente novamente.');
-      })
-    };
-
-    return { accounts, accountForm, categories, createAccount, loadAccounts, loadCategories, 
+    return { accounts, accountForm, createAccount, loadAccounts,
     toastMessage, toastSeverity, toastShow, showToast }
   },
   mounted() {
     this.loadAccounts();
-    this.loadCategories();
   }
 });
 </script>

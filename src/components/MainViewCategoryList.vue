@@ -2,9 +2,11 @@
   <div class="columns">
     <div class="column is-full" v-if="categories.length > 0">
       <div class="field is-grouped is-grouped-multiline">
-        <div class="control" v-for="category in categories" :key="category._id">
+        <div class="control" v-for="(category, index) in categories" :key="category._id">
           <div class="tags has-addons">
-            <span class="tag is-link is-medium">{{category.description}}</span>
+            <span class="tag is-medium" :class="index % 2 == 0 ? 'is-link' : 'is-info'">
+              {{category.description}}
+            </span>
             <a class="tag is-delete is-medium" @click="deleteCategory(category)"></a>
           </div>
         </div>
@@ -21,29 +23,38 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import Category from '@/types/Category';
+import categoriesService from '@/services/categories.service';
 
 export default defineComponent ({
   name: "MainViewCategoryList",
-  props: {
-    categories: {
-      require: true,
-      type: Array as PropType<Category[]>
-    }
-  },
   setup(props, { emit }) {
+    const categories = ref<Category[]>([]);
+
     //functions
+    const loadCategories = async () => {
+      await categoriesService.getCategories()
+      .then(response => {
+        categories.value = response.data;
+      })
+      .catch(err => {
+        console.log(err);
+        emit('error', {
+          severity: 'error',
+          message: 'Algo de errado ocorreu. Tente novamente.'
+        });
+      })
+    };
+    
     const deleteCategory = (category: Category) => {
       alert('Deleta categoria: ' + category._id + ' ' + category.description);
-
-      emit('error', {
-        severity: 'error',
-        message: category.description
-      });
     };
 
-    return { deleteCategory }
+    return { categories, deleteCategory, loadCategories }
+  },
+  mounted() {
+    this.loadCategories();
   }
 })
 </script>
