@@ -74,7 +74,7 @@
   </div>
 
   <AccountViewTransactionModal :accounts="accounts" :showModal="showAddModal"
-  @close="toggleAddModal()"/>
+  @close="toggleAddModal()" @error="showToast('error', 'Algo de errado ocorreu. Tente novamente.')"/>
 </template>
 
 <script lang="ts">
