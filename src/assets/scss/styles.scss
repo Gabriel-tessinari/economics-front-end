@@ -5,12 +5,25 @@
   padding: 0 1rem;
 }
 
-.title {
-  border: 1px solid $black;
-  font-size: 1.5rem;
+p.title {
+  font-size: 2rem;
   font-weight: 900;
-  padding: 1rem;
 }
+
+small {
+  color: $red;
+}
+
+.label {
+  color: currentColor !important;
+}
+
+// .title {
+//   border: 1px solid $black;
+//   font-size: 1.5rem;
+//   font-weight: 900;
+//   padding: 1rem;
+// }
 
 .is-green-color {
   color: $green;

@@ -1,31 +1,42 @@
 <template>
   <TheToast :show="toastShow" :severity="toastSeverity" :message="toastMessage"/>
-  <div class="columns">
-    <div class="column is-half-desktop">
-      <div class="title">
-        <div class="columns">
-          <div class="column is-full">
-            <p>Contas</p>
+  <div class="tile is-ancestor">
+    <div class="tile is-vertical is-6">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-link">
+          <p class="title">Contas</p>
+          <div class="columns">
+            <div class="column is-one-third">
+              <label class="label">Nome</label>
+              <input class="input is-primary" type="text" v-model="accountForm.description">
+            </div>
+            <div class="column is-one-third">
+              <label class="label">Valor</label>
+              <TheCurrencyInput v-model="accountForm.total"/>
+            </div>
+            <div class="column is-one-third">
+              <label class="label is-invisible">*</label>
+              <button class="button is-primary is-fullwidth" @click="createAccount()"
+              :disabled="!accountForm.description || !accountForm.total">
+                Adicionar
+              </button>
+            </div>
           </div>
-        </div>
-        <div class="columns">
-          <div class="column is-one-third">
-            <label class="label">Nome</label>
-            <input class="input is-primary" type="text" v-model="accountForm.description">
-          </div>
-          <div class="column is-one-third">
-            <label class="label">Valor</label>
-            <TheCurrencyInput v-model="accountForm.total"/>
-          </div>
-          <div class="column is-one-third">
-            <label class="label is-invisible">*</label>
-            <button class="button is-primary is-fullwidth" @click="createAccount()"
-            :disabled="!accountForm.description || !accountForm.total">
-              Adicionar
-            </button>
-          </div>
-        </div>
-        <MainViewAccountsCards :accounts="accounts"/>
+          <MainViewAccountsCards :accounts="accounts"/>
+        </article>
+      </div>
+    </div>
+    <div class="tile is-vertical is-6">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-warning">
+          <p class="title">Categorias</p>
+          <MainViewCategoryList :categories="categories" @error="(error) => showToast(error.severity, error.message)"/>
+        </article>
+      </div>
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-success">
+          <p class="title">Subcategorias</p>
+        </article>
       </div>
     </div>
   </div>
@@ -36,15 +47,19 @@ import { defineComponent, ref } from 'vue';
 import TheCurrencyInput from "@/components/TheCurrencyInput.vue";
 import TheToast from "@/components/TheToast.vue";
 import MainViewAccountsCards from "@/components/MainViewAccountsCards.vue";
+import MainViewCategoryList from "@/components/MainViewCategoryList.vue";
 import accountService from "@/services/accounts.service";
+import categoriesService from '@/services/categories.service';
 import Account from '@/types/Account';
+import Category from '@/types/Category';
 
 export default defineComponent({
   name: 'MainView',
   components: {
     TheToast,
     TheCurrencyInput,
-    MainViewAccountsCards
+    MainViewAccountsCards,
+    MainViewCategoryList
   },
   setup() {
     const accounts = ref<Account[]>([]);
@@ -52,6 +67,7 @@ export default defineComponent({
       description: '',
       total: 0
     });
+    const categories = ref<Category[]>([]);
     const toastMessage = ref('');
     const toastSeverity = ref('');
     const toastShow = ref(false);
@@ -87,14 +103,29 @@ export default defineComponent({
       })
     };
 
-    return { accounts, accountForm, clean, createAccount, loadAccounts, showToast, toastMessage, toastSeverity, toastShow }
+    const loadCategories = async () => {
+      await categoriesService.getCategories()
+      .then(response => {
+        categories.value = response.data;
+      })
+      .catch(err => {
+        console.log(err);
+        showToast('error', 'Algo de errado ocorreu. Tente novamente.');
+      })
+    };
+
+    return { accounts, accountForm, categories, createAccount, loadAccounts, loadCategories, 
+    toastMessage, toastSeverity, toastShow, showToast }
   },
   mounted() {
     this.loadAccounts();
+    this.loadCategories();
   }
 });
 </script>
 
-<style lang="scss">
-
+<style scoped lang="scss">
+  .tile.is-ancestor {
+    margin: -12px 0 0;
+  }
 </style>

@@ -20,8 +20,8 @@
         </footer>
       </div>
     </div>
-    <div class="column is-full">
-      <article class="message is-warning" v-if="accounts.length == 0">
+    <div class="column is-full" v-if="accounts.length == 0">
+      <article class="message is-primary">
         <div class="message-body">
           Não há contas cadastradas.
         </div>
@@ -45,7 +45,7 @@ export default defineComponent ({
   setup() {
     //functions
     const totalFormat = (total: number) => {
-      return 'R$' + total.toFixed(2);
+      return 'R$' + total.toFixed(2).replace('.', ',');
     }
 
     const deleteAccount = (account: Account) => {
