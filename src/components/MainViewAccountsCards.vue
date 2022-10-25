@@ -1,6 +1,6 @@
 <template>
   <div class="columns">
-    <div class="column is-one-quarter" v-for="account in accounts" :key="account._id">
+    <div class="column is-half-desktop" v-for="account in accounts" :key="account._id">
       <div class="card">
         <header class="card-header">
           <p class="card-header-title">{{account.description}}</p>
@@ -59,6 +59,10 @@ export default defineComponent ({
 
 <style scoped lang="scss">
 @import '@/assets/scss/global.scss';
+
+  .columns {
+    flex-wrap: wrap;
+  }
 
   .card {
     border: 1px solid $black;
