@@ -1,5 +1,18 @@
 <template>
   <div class="columns">
+    <div class="column is-half">
+      <label class="label">Descrição</label>
+      <input class="input is-info" type="text" v-model="description" placeholder="Informe">
+    </div>
+    <div class="column is-half">
+      <label class="label is-invisible">*</label>
+      <button class="button is-info is-fullwidth" @click="createCategory()"
+      :disabled="!description">
+        Adicionar
+      </button>
+    </div>
+  </div>
+  <div class="columns">
     <div class="column is-full" v-if="categories.length > 0">
       <div class="field is-grouped is-grouped-multiline">
         <div class="control" v-for="(category, index) in categories" :key="category._id">
@@ -31,6 +44,7 @@ export default defineComponent ({
   name: "MainViewCategoryList",
   setup(props, { emit }) {
     const categories = ref<Category[]>([]);
+    const description = ref('');
 
     //functions
     const loadCategories = async () => {
@@ -46,12 +60,17 @@ export default defineComponent ({
         });
       })
     };
+
+    const createCategory = () => {
+      alert('Criar categoria: ' + description.value);
+      description.value = '';
+    };
     
     const deleteCategory = (category: Category) => {
       alert('Deleta categoria: ' + category._id + ' ' + category.description);
     };
 
-    return { categories, deleteCategory, loadCategories }
+    return { categories, createCategory, deleteCategory, description, loadCategories }
   },
   mounted() {
     this.loadCategories();
