@@ -36,12 +36,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import Category from '@/types/Category';
 import categoriesService from '@/services/categories.service';
 
 export default defineComponent ({
   name: "MainViewCategoryList",
+  emits: ['error'],
   setup(props, { emit }) {
     const categories = ref<Category[]>([]);
     const description = ref('');
