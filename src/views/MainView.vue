@@ -1,11 +1,11 @@
 <template>
-  <TheToast :show="toastShow" :severity="toastSeverity" :message="toastMessage"/>
+  <TheToast :request="toastRequest"/>
   <div class="tile is-ancestor">
     <div class="tile is-vertical is-6">
       <div class="tile is-parent">
         <article class="tile is-child notification is-link">
           <p class="title">Contas</p>
-          <MainViewAccountList @error="(error) => showToast(error.severity, error.message)"/>
+          <MainViewAccountList @error="(error) => showToast(error)"/>
         </article>
       </div>
     </div>
@@ -13,7 +13,7 @@
       <div class="tile is-parent">
         <article class="tile is-child notification is-warning">
           <p class="title">Categorias</p>
-          <MainViewCategoryList @error="(error) => showToast(error.severity, error.message)"/>
+          <MainViewCategoryList @error="(error) => showToast(error)"/>
         </article>
       </div>
       <div class="tile is-parent">
@@ -30,6 +30,7 @@ import { defineComponent, ref } from 'vue';
 import TheToast from "@/components/TheToast.vue";
 import MainViewAccountList from "@/components/MainViewAccountList.vue";
 import MainViewCategoryList from "@/components/MainViewCategoryList.vue";
+import ToastRequest from '@/types/ToastRequest';
 
 export default defineComponent({
   name: 'MainView',
@@ -39,19 +40,20 @@ export default defineComponent({
     MainViewCategoryList
   },
   setup() {
-    const toastMessage = ref('');
-    const toastSeverity = ref('');
-    const toastShow = ref(false);
+    const toastRequest = ref<ToastRequest>({
+      severity: '',
+      message: '',
+      show: false
+    });
 
     //functions
-    const showToast = (severity: string, message: string) => {
-      toastMessage.value = message;
-      toastSeverity.value = severity;
-      toastShow.value = true;
-      setTimeout(() => toastShow.value = false, 5000);
+    const showToast = (request: ToastRequest) => {
+      request.show = true;
+      toastRequest.value = request;
+      setTimeout(() => toastRequest.value.show = false, 5000);
     };
 
-    return { showToast, toastMessage, toastSeverity, toastShow }
+    return { showToast, toastRequest }
   }
 });
 </script>

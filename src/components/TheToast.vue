@@ -1,15 +1,15 @@
 <template>
   <transition name="toast">
-    <div class="toast-wrapper" v-if="show">
-      <div class="toast" 
-      :class="severity == 'error' ? 'toast-error' : severity == 'success' ? 'toast-success' : 'toast-warning'">
+    <div class="toast-wrapper" v-if="request.show">
+      <div class="toast" :class="request.severity == 'error' ? 'toast-error' : 
+      request.severity == 'success' ? 'toast-success' : 'toast-warning'">
         <div class="toast-icon">
-          <span class="material-symbols-rounded" v-if="severity == 'error'">error</span>
-          <span class="material-symbols-rounded" v-if="severity == 'success'">check_circle</span>
-          <span class="material-symbols-rounded" v-if="severity == 'warning'">warning</span>
+          <span class="material-symbols-rounded" v-if="request.severity == 'error'">error</span>
+          <span class="material-symbols-rounded" v-if="request.severity == 'success'">check_circle</span>
+          <span class="material-symbols-rounded" v-if="request.severity == 'warning'">warning</span>
         </div>
         <div class="toast-message">
-          <p>{{message}}</p>
+          <p>{{request.message}}</p>
         </div>
       </div>
     </div>
@@ -17,22 +17,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+import ToastRequest from "@/types/ToastRequest";
 
 export default defineComponent({
   name: 'TheToast',
   props: {
-    show: {
+    request: {
       require: true,
-      type: Boolean
-    },
-    message: {
-      require: true,
-      type: String
-    },
-    severity: {
-      require: true,
-      type: String
+      type: Object as PropType<ToastRequest>
     }
   }
 });
