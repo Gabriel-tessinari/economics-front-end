@@ -64,7 +64,11 @@ export default defineComponent ({
     const { inputRef } = useCurrencyInput({
       currency: 'BRL',
       precision: 2,
-      valueRange: { min: 0 }
+      valueRange: { min: 0 },
+      hideCurrencySymbolOnFocus: false,
+      hideGroupingSeparatorOnFocus: false,
+      hideNegligibleDecimalDigitsOnFocus: false,
+      useGrouping: true
     });
 
     //functions
@@ -82,10 +86,29 @@ export default defineComponent ({
       })
     };
 
-    const createAccount = () => {
-      alert('Conta: ' + description.value + ' Valor: ' + total.value);
-      description.value = '';
-      total.value = 0;
+    const createAccount = async () => {
+      await accountService.saveAccount(mapperRequest())
+      .then(() => {
+        description.value = '';
+        total.value = 0;
+        loadAccounts();
+      })
+      .catch(err => {
+        console.log(err);
+        emit('error', {
+          severity: 'error',
+          message: 'Algo de errado ocorreu. Tente novamente.'
+        });
+      })
+    };
+
+    const mapperRequest = (): Account => {
+      total.value = parseFloat(total.value.toString().split('$')[1].replace(',', '.'));
+      console.log(total.value)
+      return {
+        description: description.value,
+        total: total.value
+      }
     };
 
     const totalFormat = (total: number) => {

@@ -1,5 +1,5 @@
 interface Account {
-  _id: string;
+  _id?: string;
   description: string;
   total: number;
 }

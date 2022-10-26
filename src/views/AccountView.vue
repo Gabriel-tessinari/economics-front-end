@@ -139,6 +139,7 @@ export default defineComponent({
     };
 
     const loadTransactions = async () => {
+      if(account.value._id)
       await transactionService.getTransactions(account.value._id, month.value, year.value)
       .then(response => {
         transactions.value = response.data;
