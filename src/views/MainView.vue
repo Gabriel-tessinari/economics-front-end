@@ -22,6 +22,13 @@
         </article>
       </div>
     </div>
+    <div class="tile is-12">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-danger">
+          <p class="title">Cartões</p>
+        </article>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,17 +47,16 @@ export default defineComponent({
     MainViewCategoryList
   },
   setup() {
-    const toastRequest = ref<ToastRequest>({
-      severity: '',
-      message: '',
-      show: false
-    });
+    const toastRequest = ref<ToastRequest>(
+      new ToastRequest()
+    );
 
     //functions
     const showToast = (request: ToastRequest) => {
-      request.show = true;
+      request.config();
+      request.toggleShow();
       toastRequest.value = request;
-      setTimeout(() => toastRequest.value.show = false, 5000);
+      setTimeout(() => toastRequest.value.toggleShow(), 5000);
     };
 
     return { showToast, toastRequest }
@@ -61,5 +67,6 @@ export default defineComponent({
 <style scoped lang="scss">
   .tile.is-ancestor {
     margin: -12px 0 0;
+    flex-wrap: wrap;
   }
 </style>

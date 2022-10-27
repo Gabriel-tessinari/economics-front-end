@@ -37,6 +37,7 @@
 import { defineComponent, ref } from 'vue';
 import Category from '@/types/Category';
 import categoriesService from '@/services/categories.service';
+import ToastRequest from '@/types/ToastRequest';
 
 export default defineComponent ({
   name: "MainViewCategoryList",
@@ -53,10 +54,7 @@ export default defineComponent ({
       })
       .catch(err => {
         console.log(err);
-        emit('error', {
-          severity: 'error',
-          message: 'Algo de errado ocorreu. Tente novamente.'
-        });
+        emit('error', new ToastRequest(err.response.status, err.response.data));
       })
     };
 
@@ -72,10 +70,7 @@ export default defineComponent ({
       })
       .catch(err => {
         console.log(err);
-        emit('error', {
-          severity: 'error',
-          message: 'Algo de errado ocorreu. Tente novamente.'
-        });
+        emit('error', new ToastRequest(err.response.status, err.response.data));
       })
     };
     
