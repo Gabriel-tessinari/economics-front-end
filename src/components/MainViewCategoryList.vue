@@ -7,9 +7,7 @@
     <div class="column is-half">
       <label class="label is-invisible">*</label>
       <button class="button is-info is-fullwidth" @click="createCategory()"
-      :disabled="!description">
-        Adicionar
-      </button>
+      :disabled="!description">Adicionar</button>
     </div>
   </div>
   <div class="columns">
@@ -62,9 +60,23 @@ export default defineComponent ({
       })
     };
 
-    const createCategory = () => {
-      alert('Criar categoria: ' + description.value);
-      description.value = '';
+    const createCategory = async () => {
+      let category: Category = {
+        description: description.value
+      };
+
+      await categoriesService.saveCategory(category)
+      .then(() => {
+        description.value = '';
+        loadCategories();
+      })
+      .catch(err => {
+        console.log(err);
+        emit('error', {
+          severity: 'error',
+          message: 'Algo de errado ocorreu. Tente novamente.'
+        });
+      })
     };
     
     const deleteCategory = (category: Category) => {
