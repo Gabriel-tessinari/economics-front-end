@@ -4,8 +4,14 @@ import api from './base';
 const route = '/transaction';
 
 export default {
+  deleteTransaction(id: string) {
+    const url = route + '/' + id;
+    return api().delete(url);
+  },
+
   getTransactions(account: string, month: string, year: string) {
-    return api().get(route + '/account/' + account + '/month/' + month + '/year/' + year);
+    const url = route + '/account/' + account + '/month/' + month + '/year/' + year;
+    return api().get(url);
   },
 
   saveTransaction(transaction: Transaction) {
