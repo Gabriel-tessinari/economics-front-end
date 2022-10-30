@@ -18,7 +18,7 @@
   </div>
   <div class="columns">
     <div class="column is-half-desktop" v-for="account in accounts" :key="account._id">
-      <div class="card">
+      <div class="card" v-if="!loading">
         <header class="card-header">
           <p class="card-header-title">{{account.description}}</p>
           <button class="card-header-icon" @click="deleteAccount(account)">
@@ -37,12 +37,15 @@
         </footer>
       </div>
     </div>
-    <div class="column is-full" v-if="accounts.length == 0">
+    <div class="column is-full" v-if="!loading && accounts.length == 0">
       <article class="message is-primary">
         <div class="message-body">
           Não há contas cadastradas.
         </div>
       </article>
+    </div>
+    <div class="column is-full" v-if="loading">
+      <progress class="progress is-danger" max="100"></progress>
     </div>
   </div>
 </template>
@@ -58,6 +61,7 @@ export default defineComponent ({
   name: "MainViewAccountList",
   emits: ['error', 'change', 'update:modelValue'],
   setup(props, { emit }) {
+    const loading = ref(false);
     const accounts = ref<Account[]>([]);
     const description = ref('');
     const total = ref(0);
@@ -74,26 +78,32 @@ export default defineComponent ({
 
     //functions
     const loadAccounts = async () => {
+      toggleLoading();
       await accountService.getAccounts()
       .then(response => {
         accounts.value = response.data;
+        toggleLoading();
       })
       .catch(err => {
         console.log(err);
         emit('error', new ToastRequest(err.response.status, err.response.data));
+        toggleLoading();
       })
     };
 
     const createAccount = async () => {
+      toggleLoading();
       await accountService.saveAccount(mapperRequest())
       .then(() => {
         description.value = '';
         total.value = 0;
+        toggleLoading();
         loadAccounts();
       })
       .catch(err => {
         console.log(err);
         emit('error', new ToastRequest(err.response.status, err.response.data));
+        toggleLoading();
       })
     };
 
@@ -110,12 +120,36 @@ export default defineComponent ({
       return 'R$' + total.toFixed(2).replace('.', ',');
     }
 
-    const deleteAccount = (account: Account) => {
-      alert('Deleta conta: ' + account._id);
+    const deleteAccount = async (account: Account) => {
+      if(account._id) {
+        toggleLoading();
+        await accountService.deleteAccount(account._id)
+        .then(() => {
+          deleteFromList(account);
+          toggleLoading();
+        })
+        .catch(err => {
+          console.log(err);
+          emit('error', new ToastRequest(err.response.status, err.response.data));
+          toggleLoading();
+        })
+      }
+    };
+
+    const deleteFromList = (account: Account) => {
+      const aux: Account[] = accounts.value.filter(item => {
+        return item._id != account._id;
+      });
+
+      accounts.value = aux;
+    };
+
+    const toggleLoading = () => {
+      loading.value = !loading.value;
     };
 
     return { accounts, createAccount, deleteAccount, description, inputRef, 
-    loadAccounts, total, totalFormat }
+    loadAccounts, loading, total, totalFormat }
   },
   mounted() {
     this.loadAccounts();
