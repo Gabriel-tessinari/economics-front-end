@@ -1,6 +1,6 @@
 <template>
   <TheNavbar/>
-  <router-view/>
+  <router-view style="flex: 1"/>
   <footer class="footer">
     <div class="content has-text-centered">
       <p><strong>Economics</strong> by Gabriel Tessinari.</p>

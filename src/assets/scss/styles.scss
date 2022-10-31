@@ -5,25 +5,9 @@
   padding: 0 1rem;
 }
 
-p.title {
-  font-size: 2rem;
-  font-weight: 900;
+.input {
+  background: $background;
 }
-
-small {
-  color: $red;
-}
-
-.label {
-  color: currentColor !important;
-}
-
-// .title {
-//   border: 1px solid $black;
-//   font-size: 1.5rem;
-//   font-weight: 900;
-//   padding: 1rem;
-// }
 
 .is-green-color {
   color: $green;
@@ -32,3 +16,32 @@ small {
 .is-red-color {
   color: $red;
 }
+
+.label {
+  color: currentColor !important;
+}
+
+p.title {
+  font-size: 2rem;
+  font-weight: 900;
+}
+
+.select > select {
+  background: $background;
+}
+
+small {
+  color: $red;
+}
+
+.tile.is-ancestor {
+  margin: -12px 0 0 !important;
+  flex-wrap: wrap;
+}
+
+// .title {
+//   border: 1px solid $black;
+//   font-size: 1.5rem;
+//   font-weight: 900;
+//   padding: 1rem;
+// }

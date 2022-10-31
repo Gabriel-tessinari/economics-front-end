@@ -41,6 +41,7 @@ import ToastRequest from '@/types/ToastRequest';
 
 export default defineComponent({
   name: 'MainView',
+  inheritAttrs: false,
   components: {
     TheToast,
     MainViewAccountList,
@@ -65,8 +66,5 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-  .tile.is-ancestor {
-    margin: -12px 0 0;
-    flex-wrap: wrap;
-  }
+  
 </style>

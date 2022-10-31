@@ -1,6 +1,22 @@
 <template>
-  <TheToast :show="toastShow" :severity="toastSeverity" :message="toastMessage"/>
-  <div class="columns">
+  <TheToast :request="toastRequest"/>
+  <div class="tile is-ancestor content-height">
+    <div class="tile is-12">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-info">
+          <AccountViewHeader @error="(error) => showToast(error)"/>
+        </article>
+      </div>
+    </div>
+    <div class="tile is-12">
+      <div class="tile is-parent">
+        <article class="tile is-child notification is-cyan">
+          <p class="title">Transações</p>
+        </article>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="columns">
     <div class="column is-one-quarter">
       <label class="label">Conta</label>
       <div class="select is-primary is-fullwidth">
@@ -74,82 +90,34 @@
   </div>
 
   <AccountViewTransactionModal :accounts="accounts" :showModal="showAddModal"
-  @close="toggleAddModal()" @error="showToast('error', 'Algo de errado ocorreu. Tente novamente.')"/>
+  @close="toggleAddModal()" @error="showToast('error', 'Algo de errado ocorreu. Tente novamente.')"/> -->
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import TheToast from "@/components/TheToast.vue";
-import AccountViewTransactionModal from "@/components/AccountViewTransactionModal.vue";
-import TransactionTable from "@/components/TheTransactionTable.vue";
-import transactionService from "@/services/transactions.service";
-import accountService from "@/services/accounts.service";
-import Account from "@/types/Account";
+import AccountViewHeader from "@/components/AccountViewHeader.vue";
+import ToastRequest from '@/types/ToastRequest';
 
 export default defineComponent({
   name: 'AccountView',
+  inheritAttrs: false,
   components: {
     TheToast,
-    TransactionTable,
-    AccountViewTransactionModal
+    AccountViewHeader
   },
   setup() {
-    const account = ref<Account>({
-      _id: '',
-      description: '',
-      total: 0
-    });
-    const accounts = ref<Account[]>([]);
-    const month = ref('');
-    const year = ref('');
     const showAddModal = ref(false);
-    const title = ref('Tabela Vazia');
-    const transactions = ref([]);
-    const toastMessage = ref('');
-    const toastSeverity = ref('');
-    const toastShow = ref(false);
+    const toastRequest = ref<ToastRequest>(
+      new ToastRequest()
+    );
 
     //functions
-    const clean = () => {
-      month.value = '';
-      year.value = '';
-      account.value = {
-        _id: '',
-        description: '',
-        total: 0
-      };
-    };
-
-    const showToast = (severity: string, message: string) => {
-      toastMessage.value = message;
-      toastSeverity.value = severity;
-      toastShow.value = true;
-      setTimeout(() => toastShow.value = false, 5000);
-    }
-
-    const loadAccounts = async () => {
-      await accountService.getAccounts()
-      .then(response => {
-        accounts.value = response.data;
-      })
-      .catch(err => {
-        console.log(err);
-        showToast('error', 'Algo de errado ocorreu. Tente novamente.');
-      })
-    };
-
-    const loadTransactions = async () => {
-      if(account.value._id)
-      await transactionService.getTransactions(account.value._id, month.value, year.value)
-      .then(response => {
-        transactions.value = response.data;
-        title.value = account.value.description + ' - ' + month.value + '/' + year.value;
-        clean();
-      })
-      .catch(err => {
-        console.log(err);
-        showToast('error', 'Algo de errado ocorreu. Tente novamente.');
-      })
+    const showToast = (request: ToastRequest) => {
+      request.config();
+      request.toggleShow();
+      toastRequest.value = request;
+      setTimeout(() => toastRequest.value.toggleShow(), 5000);
     };
 
     const toggleAddModal = () => {
@@ -160,16 +128,20 @@ export default defineComponent({
       alert('Gera relatório.');
     }
 
-    return { account, accounts, clean, generateReport, loadAccounts, loadTransactions, month,
-    showAddModal, showToast, title, toastMessage, toastSeverity, toastShow, toggleAddModal, 
-    transactions, year }
-  },
-  mounted() {
-    this.loadAccounts();
+    return { generateReport, showToast, toastRequest, toggleAddModal }
   }
 });
 </script>
 
-<style lang="scss">
-  
+<style scoped lang="scss">
+@import '@/assets/scss/global.scss';
+
+  .notification.is-cyan {
+    background-color: $cyan;
+    color: $black-bis;
+  }
+
+  .tile.content-height {
+    flex-direction: column;
+  }
 </style>
