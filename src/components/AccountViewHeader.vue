@@ -54,10 +54,11 @@ import transactionService from "@/services/transactions.service";
 import Account from "@/types/Account";
 import Transaction from '@/types/Transaction';
 import ToastRequest from '@/types/ToastRequest';
+import TransactionTableRequest from '@/types/TransactionTableRequest';
 
 export default defineComponent({
   name: 'AccountViewHeader',
-  emits: ['error'],
+  emits: ['error', 'info'],
   setup(props, { emit }) {
     const loading = ref(false);
     const accounts = ref<Account[]>([]);
@@ -65,6 +66,9 @@ export default defineComponent({
     const month = ref('');
     const year = ref('');
     const account = ref<Account>(new Account());
+    const transactionRequest = ref<TransactionTableRequest>(
+      new TransactionTableRequest()
+    );
 
     //functions
     const clean = () => {
@@ -93,7 +97,9 @@ export default defineComponent({
         await transactionService.getTransactions(account.value._id, month.value, year.value)
         .then(response => {
           transactions.value = response.data;
+          mapTransactionRequest();
           clean();
+          emit('info', transactionRequest.value);
           toggleLoading();
         })
         .catch(err => {
@@ -104,11 +110,19 @@ export default defineComponent({
       }
     };
 
+    const mapTransactionRequest = () => {
+      transactionRequest.value.account = account.value;
+      transactionRequest.value.month = month.value;
+      transactionRequest.value.year = parseInt(year.value);
+      transactionRequest.value.transactions = transactions.value;
+    };
+
     const toggleLoading = () => {
       loading.value = !loading.value;
     };
 
-    return { account, accounts, loadAccounts, loading, loadTransactions, month, year }
+    return { account, accounts, loadAccounts, loading, loadTransactions, month, 
+    transactionRequest, year }
   },
   mounted() {
     this.loadAccounts();
