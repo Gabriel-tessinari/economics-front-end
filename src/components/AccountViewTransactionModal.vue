@@ -8,21 +8,19 @@
       </header>
       <section class="modal-card-body">
         <div class="columns">
-          <div class="column is-one-half">
-            <label class="label">Conta</label>
-            <div class="select is-primary is-fullwidth">
-              <select v-model="form.accountId">
-                <option v-for="element in accounts" :key="element._id" :value="element._id">
-                  {{element.description}}
-                </option>
-              </select>
-              <small v-if="accounts.length == 0">Erro ao carregar lista de contas.</small>
-            </div>
+          <div class="column is-12">
+            <p><strong>{{request.account.description}}</strong></p>
           </div>
-          <div class="column is-one-half">
-            <label class="label">Data</label>
-            <input class="input is-primary" type="text" placeholder="DD/MM/AAAA"
+        </div>
+        <div class="columns">
+          <div class="column is-3">
+            <label class="label">Dia /{{request.month}}/{{request.year}}</label>
+            <input class="input is-primary" type="text" placeholder="01"
             v-model="form.date">
+          </div>
+          <div class="column is-9">
+            <label class="label">Descrição</label>
+            <input class="input is-primary" type="text" v-model="form.description">
           </div>
         </div>
         <div class="columns">
@@ -40,12 +38,6 @@
           <div class="column is-one-half">
             <label class="label">Subcategoria</label>
             <input class="input is-primary" type="text" placeholder="Select Subcategoria">
-          </div>
-        </div>
-        <div class="columns">
-          <div class="column is-one">
-            <label class="label">Descrição</label>
-            <input class="input is-primary" type="text" v-model="form.description">
           </div>
         </div>
         <div class="columns">
@@ -78,19 +70,21 @@ import { defineComponent, PropType, ref } from "vue";
 import TheCurrencyInput from "./TheCurrencyInput.vue";
 import categoriesService from "@/services/categories.service";
 import transactionsService from "@/services/transactions.service";
-import Account from "@/types/Account";
+import AccountViewTransactionModalRequest from "@/types/AccountViewTransactionModalRequest";
 import Category from "@/types/Category";
 import Transaction from "@/types/Transaction";
+import ToastRequest from "@/types/ToastRequest";
 
 export default defineComponent({
   name: 'AccountViewTransactionModal',
+  emits: ['close', 'error'],
   components: {
     TheCurrencyInput
   },
   props: {
-    accounts: {
+    request: {
       required: true,
-      type: Array as PropType<Account[]>
+      type: Object as PropType<AccountViewTransactionModalRequest>
     },
     showModal: {
       required: true,
@@ -100,11 +94,10 @@ export default defineComponent({
   setup(props, { emit }) {
     const categories = ref<Category[]>([]);
     const form = ref({
-      accountId: '',
-      date: '',
+      day: '',
+      description: '',
       categoryId: '',
       subcategoryId: '',
-      description: '',
       type: 'DEBIT',
       value: 0
     });
@@ -112,11 +105,10 @@ export default defineComponent({
     //functions
     const clean = () => {
       form.value = {
-        accountId: '',
-        date: '',
+        day: '',
+        description: '',
         categoryId: '',
         subcategoryId: '',
-        description: '',
         type: 'DEBIT',
         value: 0
       };
@@ -138,35 +130,46 @@ export default defineComponent({
     };
 
     const isReadyToSave = () => {
-      return (form.value.accountId != '' && form.value.date != '' && form.value.categoryId != '' &&
+      return (form.value.day != '' && form.value.categoryId != '' &&
       form.value.description != '' && form.value.value > 0);
     };
 
     const saveTransaction = async () => {
       await transactionsService.saveTransaction(mapperRequest())
       .then(() => {
-        alert('Salvo com sucesso.');
         close();
       })
       .catch(err => {
         console.log(err);
-        emit('error');
+        emit('error', new ToastRequest(err.response.status, err.response.data));
       })
     };
 
     const mapperRequest = (): Transaction => {
       let subcategoryId: string | undefined = undefined;
+      let accountId = '';
+      let date = '';
+
+      if(props.request.account._id) {
+        accountId = props.request.account._id;
+      }
 
       if(form.value.subcategoryId != '') {
         subcategoryId = form.value.subcategoryId;
       }
 
+      if(!isNaN(parseInt(form.value.day))) {
+        parseInt(form.value.day) < 10 ? 
+        date = 0 + form.value.day + '/' + props.request.month + '/' + props.request.year :
+        date = 0 + form.value.day + '/' + props.request.month + '/' + props.request.year
+      }
+
       return {
-        date: form.value.date,
+        date: date,
         description: form.value.description,
         value: form.value.value,
         type: form.value.type,
-        accountId: form.value.accountId,
+        accountId: accountId,
         categoryId: form.value.categoryId,
         subcategoryId: subcategoryId
       }

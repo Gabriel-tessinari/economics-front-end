@@ -25,9 +25,6 @@
       </div>
     </div>
   </div>
-  <!-- 
-  <AccountViewTransactionModal :accounts="accounts" :showModal="showAddModal"
-  @close="toggleAddModal()" @error="showToast('error', 'Algo de errado ocorreu. Tente novamente.')"/> -->
 </template>
 
 <script lang="ts">
@@ -48,7 +45,6 @@ export default defineComponent({
     TransactionTable
   },
   setup() {
-    const showAddModal = ref(false);
     const toastRequest = ref<ToastRequest>(
       new ToastRequest()
     );
@@ -72,11 +68,7 @@ export default defineComponent({
       transactionRequest.value.transactions = transactions;
     };
 
-    const toggleAddModal = () => {
-      showAddModal.value = !showAddModal.value;
-    };
-
-    return { setTransactionRequest, showToast, toastRequest, toggleAddModal, transactionRequest,
+    return { setTransactionRequest, showToast, toastRequest, transactionRequest,
     updateTransactionRequest }
   }
 });
