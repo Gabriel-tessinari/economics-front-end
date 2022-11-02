@@ -18,7 +18,9 @@
               {{transactionRequest.month}}/{{transactionRequest.year}}
             </p>
           </div>
-          <TransactionTable :request="transactionRequest"/>
+          <TransactionTable :request="transactionRequest"
+          @error="(error) => showToast(error)"
+          @update="(transactions) => updateTransactionRequest(transactions)"/>
         </article>
       </div>
     </div>
@@ -35,6 +37,7 @@ import AccountViewHeader from "@/components/AccountViewHeader.vue";
 import TransactionTable from "@/components/TheTransactionTable.vue";
 import ToastRequest from '@/types/ToastRequest';
 import TransactionTableRequest from '@/types/TransactionTableRequest';
+import Transaction from '@/types/Transaction';
 
 export default defineComponent({
   name: 'AccountView',
@@ -65,15 +68,16 @@ export default defineComponent({
       transactionRequest.value = request;
     };
 
+    const updateTransactionRequest = (transactions: Transaction[]) => {
+      transactionRequest.value.transactions = transactions;
+    };
+
     const toggleAddModal = () => {
       showAddModal.value = !showAddModal.value;
     };
 
-    const generateReport = () => {
-      alert('Gera relatório.');
-    }
-
-    return { generateReport, setTransactionRequest, showToast, toastRequest, toggleAddModal, transactionRequest }
+    return { setTransactionRequest, showToast, toastRequest, toggleAddModal, transactionRequest,
+    updateTransactionRequest }
   }
 });
 </script>
