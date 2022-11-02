@@ -15,7 +15,7 @@
           <div class="has-space-between">
             <p class="title">Transações</p>
             <p>
-              {{transactionRequest.month}}/{{transactionRequest.year}}
+              {{transactionRequest.account.description}} - {{transactionRequest.month}}/{{transactionRequest.year}}
             </p>
           </div>
           <TransactionTable :request="transactionRequest"

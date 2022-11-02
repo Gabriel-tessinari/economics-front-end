@@ -46,7 +46,8 @@
     </div>
   </div>
   <AccountViewTransactionModal :request="addTransactionRequest" :showModal="showAddModal"
-  @close="toggleAddModal()" @error="(error) => emitError(error)"/>
+  @close="toggleAddModal()" @error="(error) => emitError(error)"
+  @update="(transaction) => addToList(transaction)"/>
 </template>
 
 <script lang="ts">
@@ -139,12 +140,28 @@ export default defineComponent({
       return response;
     };
 
+    const addToList = (transaction: Transaction) => {
+      let response: Transaction[] = [];
+      response.push(...props.request.transactions);
+      response.push(transaction);
+      response.sort((a, b) => compareTransactions(a, b));
+      emit('update', response);
+    };
+
+    const compareTransactions = (a: Transaction, b: Transaction) => {
+      if(a.date > b.date) return 1;
+      else if(a.date < b.date) return -1;
+      else if(a.description.toLowerCase() > b.description.toLowerCase()) return 1;
+      else if(a.description.toLowerCase() < b.description.toLowerCase()) return -1;
+      return 0;
+    };
+
     const toggleLoading = () => {
       loading.value = !loading.value;
     };
 
-    return { addTransactionRequest, categoryFormat, deleteTransaction, emitError, generateReport, isCredit, loading, 
-    setAddTransactionRequest, showAddModal, toggleAddModal, valueFormat }
+    return { addToList, addTransactionRequest, categoryFormat, deleteTransaction, emitError, generateReport, 
+    isCredit, loading, setAddTransactionRequest, showAddModal, toggleAddModal, valueFormat }
   }
 });
 </script>

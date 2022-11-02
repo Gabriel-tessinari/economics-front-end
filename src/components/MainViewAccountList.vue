@@ -109,7 +109,7 @@ export default defineComponent ({
 
     const mapperRequest = (): Account => {
       total.value = parseFloat(total.value.toString().split('$')[1].replace(',', '.'));
-      console.log(total.value)
+      
       return {
         description: description.value,
         total: total.value

@@ -15,8 +15,8 @@
         <div class="columns">
           <div class="column is-3">
             <label class="label">Dia /{{request.month}}/{{request.year}}</label>
-            <input class="input is-primary" type="text" placeholder="01"
-            v-model="form.date">
+            <input class="input is-primary" type="number" placeholder="01"
+            min="1" max="31" v-model="form.day">
           </div>
           <div class="column is-9">
             <label class="label">Descrição</label>
@@ -52,7 +52,8 @@
           </div>
           <div class="column is-one-half">
             <label class="label">Valor</label>
-            <TheCurrencyInput v-model="form.value"/>
+            <input class="input is-primary" type="text" ref="inputRef" v-model="form.value"
+            placeholder="Informe">
           </div>
         </div>
       </section>
@@ -67,7 +68,7 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from "vue";
-import TheCurrencyInput from "./TheCurrencyInput.vue";
+import { useCurrencyInput } from "vue-currency-input";
 import categoriesService from "@/services/categories.service";
 import transactionsService from "@/services/transactions.service";
 import AccountViewTransactionModalRequest from "@/types/AccountViewTransactionModalRequest";
@@ -77,10 +78,7 @@ import ToastRequest from "@/types/ToastRequest";
 
 export default defineComponent({
   name: 'AccountViewTransactionModal',
-  emits: ['close', 'error'],
-  components: {
-    TheCurrencyInput
-  },
+  emits: ['change', 'close', 'error', 'update', 'update:modelValue'],
   props: {
     request: {
       required: true,
@@ -93,25 +91,21 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const categories = ref<Category[]>([]);
-    const form = ref({
-      day: '',
-      description: '',
-      categoryId: '',
-      subcategoryId: '',
-      type: 'DEBIT',
-      value: 0
+    const form = ref<Form>(new Form());
+
+    const { inputRef } = useCurrencyInput({
+      currency: 'BRL',
+      precision: 2,
+      valueRange: { min: 0 },
+      hideCurrencySymbolOnFocus: false,
+      hideGroupingSeparatorOnFocus: false,
+      hideNegligibleDecimalDigitsOnFocus: false,
+      useGrouping: true
     });
 
     //functions
     const clean = () => {
-      form.value = {
-        day: '',
-        description: '',
-        categoryId: '',
-        subcategoryId: '',
-        type: 'DEBIT',
-        value: 0
-      };
+      form.value = new Form();
     };
 
     const close = () => {
@@ -131,12 +125,13 @@ export default defineComponent({
 
     const isReadyToSave = () => {
       return (form.value.day != '' && form.value.categoryId != '' &&
-      form.value.description != '' && form.value.value > 0);
+      form.value.description != '' && form.value.value);
     };
 
     const saveTransaction = async () => {
       await transactionsService.saveTransaction(mapperRequest())
-      .then(() => {
+      .then(response => {
+        emit('update', response.data);
         close();
       })
       .catch(err => {
@@ -150,6 +145,8 @@ export default defineComponent({
       let accountId = '';
       let date = '';
 
+      form.value.formatValue();
+
       if(props.request.account._id) {
         accountId = props.request.account._id;
       }
@@ -160,8 +157,8 @@ export default defineComponent({
 
       if(!isNaN(parseInt(form.value.day))) {
         parseInt(form.value.day) < 10 ? 
-        date = 0 + form.value.day + '/' + props.request.month + '/' + props.request.year :
-        date = 0 + form.value.day + '/' + props.request.month + '/' + props.request.year
+        date = '0' + parseInt(form.value.day) + '/' + props.request.month + '/' + props.request.year :
+        date = form.value.day + '/' + props.request.month + '/' + props.request.year
       }
 
       return {
@@ -175,12 +172,35 @@ export default defineComponent({
       }
     };
 
-    return { categories, close, form, isReadyToSave, loadCategories, saveTransaction }
+    return { categories, close, form, inputRef, isReadyToSave, loadCategories, 
+    saveTransaction }
   },
   mounted() {
     this.loadCategories();
   }
 });
+
+class Form {
+  day: string;
+  description: string;
+  categoryId: string;
+  subcategoryId: string;
+  type: string;
+  value: number;
+
+  constructor() {
+    this.day = '';
+    this.description = '';
+    this.categoryId = '';
+    this.subcategoryId = '';
+    this.type = 'DEBIT';
+    this.value = 0;
+  }
+
+  formatValue() {
+    this.value = parseFloat(this.value.toString().split('$')[1].replace(',', '.'));
+  }
+}
 </script>
 
 <style lang="scss">
