@@ -19,6 +19,7 @@
       <div class="tile is-parent">
         <article class="tile is-child notification is-success">
           <p class="title">Subcategorias</p>
+          <MainViewSubcategoryList/>
         </article>
       </div>
     </div>
@@ -37,6 +38,7 @@ import { defineComponent, ref } from 'vue';
 import TheToast from "@/components/TheToast.vue";
 import MainViewAccountList from "@/components/MainViewAccountList.vue";
 import MainViewCategoryList from "@/components/MainViewCategoryList.vue";
+import MainViewSubcategoryList from "@/components/MainViewSubcategoryList.vue";
 import ToastRequest from '@/types/ToastRequest';
 
 export default defineComponent({
@@ -45,7 +47,8 @@ export default defineComponent({
   components: {
     TheToast,
     MainViewAccountList,
-    MainViewCategoryList
+    MainViewCategoryList,
+    MainViewSubcategoryList
   },
   setup() {
     const toastRequest = ref<ToastRequest>(
