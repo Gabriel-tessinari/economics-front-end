@@ -14,6 +14,17 @@ class TransactionTableRequest {
     this.transactions = [];
   }
 
+  setThis(request: TransactionTableRequest) {
+    this.account = request.account;
+    this.month = request.month;
+    this.year = request.year;
+    this.transactions = request.transactions;
+  }
+
+  setTransactions(transactions: Transaction[]) {
+    this.transactions = transactions;
+  }
+
   isValid(): boolean {
     return (this.account._id != '' && this.month != '' && this.year != 0);
   }

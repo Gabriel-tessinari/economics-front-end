@@ -4,8 +4,8 @@
     <div class="tile is-12">
       <div class="tile is-parent">
         <article class="tile is-child notification is-info">
-          <AccountViewHeader @error="(error) => showToast(error)"
-          @info="(request) => setTransactionRequest(request)"/>
+          <AccountViewHeader @error="(error) => toastRequest.appear(error)"
+          @info="(request) => transactionRequest.setThis(request)"/>
         </article>
       </div>
     </div>
@@ -19,8 +19,8 @@
             </p>
           </div>
           <TransactionTable :request="transactionRequest"
-          @error="(error) => showToast(error)"
-          @update="(transactions) => updateTransactionRequest(transactions)"/>
+          @error="(error) => toastRequest.appear(error)"
+          @update="(transactions) => transactionRequest.setTransactions(transactions)"/>
         </article>
       </div>
     </div>
@@ -34,7 +34,6 @@ import AccountViewHeader from "@/components/AccountViewHeader.vue";
 import TransactionTable from "@/components/TheTransactionTable.vue";
 import ToastRequest from '@/types/ToastRequest';
 import TransactionTableRequest from '@/types/TransactionTableRequest';
-import Transaction from '@/types/Transaction';
 
 export default defineComponent({
   name: 'AccountView',
@@ -52,24 +51,7 @@ export default defineComponent({
       new TransactionTableRequest()
     );
 
-    //functions
-    const showToast = (request: ToastRequest) => {
-      request.config();
-      request.toggleShow();
-      toastRequest.value = request;
-      setTimeout(() => toastRequest.value.toggleShow(), 5000);
-    };
-
-    const setTransactionRequest = (request: TransactionTableRequest) => {
-      transactionRequest.value = request;
-    };
-
-    const updateTransactionRequest = (transactions: Transaction[]) => {
-      transactionRequest.value.transactions = transactions;
-    };
-
-    return { setTransactionRequest, showToast, toastRequest, transactionRequest,
-    updateTransactionRequest }
+    return { toastRequest, transactionRequest }
   }
 });
 </script>

@@ -25,6 +25,14 @@ class ToastRequest {
   toggleShow() {
     this.show = !this.show;
   }
+
+  appear(request: ToastRequest) {
+    this.status = request.status;
+    this.message = request.message;
+    this.config();
+    this.toggleShow();
+    setTimeout(() => this.toggleShow(), 5000);
+  }
 }
 
 export default ToastRequest;
