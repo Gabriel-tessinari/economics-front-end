@@ -1,6 +1,12 @@
 @import "./bulmaVariables.scss";
 @import '../../../node_modules/bulma/bulma.sass';
 
+a {
+  &.tag.is-delete {
+    color: $red !important;
+  }
+}
+
 .columns {
   padding: 0 1rem;
 }
@@ -38,10 +44,3 @@ small {
   margin: -12px 0 0 !important;
   flex-wrap: wrap;
 }
-
-// .title {
-//   border: 1px solid $black;
-//   font-size: 1.5rem;
-//   font-weight: 900;
-//   padding: 1rem;
-// }
