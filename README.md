@@ -1,24 +1,8 @@
-# economics-front-end
+# Economics front-end
 
-## Project setup
-```
-npm install
-```
+##Description [WIP]:
+Vue project made to learn how to use the framework.
+It's a basic personal financial control webapp. Using Vue 3, axios, bulma css, connected to the back-end found in the economics-back-end repository in this github account.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+##To do list:
+  - Create and load category return object with subcategories to update The subcategories section.
