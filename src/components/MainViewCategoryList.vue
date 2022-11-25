@@ -44,7 +44,7 @@ import ToastRequest from '@/types/ToastRequest';
 
 export default defineComponent ({
   name: "MainViewCategoryList",
-  emits: ['error'],
+  emits: ['error', 'update'],
   setup(props, { emit }) {
     const loading = ref(false);
     const categories = ref<Category[]>([]);
@@ -56,6 +56,7 @@ export default defineComponent ({
       await categoriesService.getCategories()
       .then(response => {
         categories.value = response.data;
+        emit('update', categories.value);
         toggleLoading();
       })
       .catch(err => {
@@ -67,21 +68,32 @@ export default defineComponent ({
 
     const createCategory = async () => {
       toggleLoading();
-      let category: Category = {
-        description: description.value
-      };
+      let category: Category = new Category();
+      category.description = description.value;
 
       await categoriesService.saveCategory(category)
-      .then(() => {
+      .then(response => {
         description.value = '';
+        addToList(response.data);
         toggleLoading();
-        loadCategories();
       })
       .catch(err => {
         console.log(err);
         emit('error', new ToastRequest(err.response.status, err.response.data));
         toggleLoading();
       })
+    };
+
+    const addToList = (category: Category) => {
+      categories.value.push(category);
+
+      categories.value.sort((a, b) => {
+        if(a.description > b.description) return 1;
+        if(a.description < b.description) return -1;
+        return 0;
+      });
+
+      emit('update', categories.value);
     };
     
     const deleteCategory = async (category: Category) => {
@@ -106,6 +118,7 @@ export default defineComponent ({
       });
 
       categories.value = aux;
+      emit('update', categories.value);
     };
 
     const toggleLoading = () => {

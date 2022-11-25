@@ -5,7 +5,7 @@
       <div class="tile is-parent">
         <article class="tile is-child notification is-link">
           <p class="title">Contas</p>
-          <MainViewAccountList @error="(error) => showToast(error)"/>
+          <MainViewAccountList @error="(error) => toastRequest.appear(error)"/>
         </article>
       </div>
     </div>
@@ -13,13 +13,17 @@
       <div class="tile is-parent">
         <article class="tile is-child notification is-warning">
           <p class="title">Categorias</p>
-          <MainViewCategoryList @error="(error) => showToast(error)"/>
+          <MainViewCategoryList @error="(error) => toastRequest.appear(error)"
+          @update="(categories) => subcategoryRequest.setCategories(categories)"/>
         </article>
       </div>
       <div class="tile is-parent">
         <article class="tile is-child notification is-success">
           <p class="title">Subcategorias</p>
-          <MainViewSubcategoryList/>
+          <MainViewSubcategoryList :request="subcategoryRequest"
+          @error="(error) => toastRequest.appear(error)"
+          @update="(category) => 
+          subcategoryRequest.setSubcategories(category.subcategories, category._id)"/>
         </article>
       </div>
     </div>
@@ -40,6 +44,7 @@ import MainViewAccountList from "@/components/MainViewAccountList.vue";
 import MainViewCategoryList from "@/components/MainViewCategoryList.vue";
 import MainViewSubcategoryList from "@/components/MainViewSubcategoryList.vue";
 import ToastRequest from '@/types/ToastRequest';
+import SubcategoryListRequest from '@/types/SubcategoryListRequest';
 
 export default defineComponent({
   name: 'MainView',
@@ -54,16 +59,11 @@ export default defineComponent({
     const toastRequest = ref<ToastRequest>(
       new ToastRequest()
     );
+    const subcategoryRequest = ref<SubcategoryListRequest>(
+      new SubcategoryListRequest()
+    );
 
-    //functions
-    const showToast = (request: ToastRequest) => {
-      request.config();
-      request.toggleShow();
-      toastRequest.value = request;
-      setTimeout(() => toastRequest.value.toggleShow(), 5000);
-    };
-
-    return { showToast, toastRequest }
+    return { subcategoryRequest, toastRequest }
   }
 });
 </script>
