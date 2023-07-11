@@ -2,6 +2,7 @@
 import { ref } from 'vue';
 
 const isExpanded = ref(localStorage.getItem('is_expanded') === 'true');
+const email = ref(localStorage.getItem('email'));
 
 function toggleMenu() {
   isExpanded.value = !isExpanded.value;
@@ -23,8 +24,8 @@ function toggleMenu() {
     </div>
 
     <h3 class="mb-2">MENU</h3>
-    <div class="menu">
-      <router-link class="button" to="/">
+    <div class="menu" v-if="email">
+      <router-link class="button" to="/home">
         <span class="material-symbols-outlined">home</span>
         <span class="router-text">Home</span>
       </router-link>
@@ -32,6 +33,13 @@ function toggleMenu() {
         <span class="material-symbols-outlined">credit_card</span>
         <span class="router-text">Cartão de Crédito</span>
       </router-link>      
+    </div>
+
+    <div class="menu" v-if="!email">
+      <router-link class="button" to="/">
+        <span class="material-symbols-outlined">login</span>
+        <span class="router-text">Login</span>
+      </router-link>
     </div>
   </aside>
 </template>
