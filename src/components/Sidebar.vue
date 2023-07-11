@@ -25,7 +25,7 @@ function toggleMenu() {
 
     <h3 class="mb-2">MENU</h3>
     <div class="menu" v-if="email">
-      <router-link class="button" to="/home">
+      <router-link class="button" to="/">
         <span class="material-symbols-outlined">home</span>
         <span class="router-text">Home</span>
       </router-link>
@@ -36,7 +36,7 @@ function toggleMenu() {
     </div>
 
     <div class="menu" v-if="!email">
-      <router-link class="button" to="/">
+      <router-link class="button" to="/login">
         <span class="material-symbols-outlined">login</span>
         <span class="router-text">Login</span>
       </router-link>
