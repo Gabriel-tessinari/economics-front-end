@@ -33,3 +33,7 @@ body {
     }
   }
 }
+
+.v-btn:disabled {
+  cursor: not-allowed !important;
+}

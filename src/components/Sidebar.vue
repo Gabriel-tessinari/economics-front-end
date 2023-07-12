@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { loginStore } from '../stores/login.store';
 
 const isExpanded = ref(localStorage.getItem('is_expanded') === 'true');
-const email = ref(localStorage.getItem('email'));
 
 function toggleMenu() {
   isExpanded.value = !isExpanded.value;
   localStorage.setItem('is_expanded', isExpanded.value.toString());
+}
+
+function logout() {
+  loginStore.value.setEmail('');
+  loginStore.value.setToken('');
 }
 </script>
 
@@ -24,7 +29,7 @@ function toggleMenu() {
     </div>
 
     <h3 class="mb-2">MENU</h3>
-    <div class="menu" v-if="email">
+    <div class="menu" v-if="loginStore.email">
       <router-link class="button" to="/">
         <span class="material-symbols-outlined">home</span>
         <span class="router-text">Home</span>
@@ -32,13 +37,22 @@ function toggleMenu() {
       <router-link class="button" to="/credit-card">
         <span class="material-symbols-outlined">credit_card</span>
         <span class="router-text">Cartão de Crédito</span>
-      </router-link>      
+      </router-link>   
     </div>
 
-    <div class="menu" v-if="!email">
+    <div class="menu" v-if="!loginStore.email">
       <router-link class="button" to="/login">
         <span class="material-symbols-outlined">login</span>
         <span class="router-text">Login</span>
+      </router-link>
+    </div>
+    
+    <div class="flex"></div>
+
+    <div class="menu" v-if="loginStore.email">
+      <router-link class="button" to="/login" @click="logout()">
+        <span class="material-symbols-outlined">logout</span>
+        <span class="router-text">Sair</span>
       </router-link>
     </div>
   </aside>
@@ -122,11 +136,15 @@ aside {
     }
   }
 
+  .flex {
+    flex: 1 1 0;
+  }
+
   &.is-expanded {
     width: 300px;
 
     .menu-toggle-wrap {
-      top: -3rem;
+      top: -3.7rem;
 
       .menu-toggle {
         transform: rotate(-180deg);
