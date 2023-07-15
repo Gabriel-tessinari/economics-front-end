@@ -1,5 +1,4 @@
 import Login from '../models/login';
-import User from '../models/user';
 import { loginStore } from '../stores/login.store';
 import api from './_base';
 

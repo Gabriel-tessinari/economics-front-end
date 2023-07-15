@@ -1,9 +1,4 @@
-export default class User {
+export default interface User {
   email: string;
   name: string;
-
-  constructor(email?: string, name?: string) {
-    this.email = email || "";
-    this.name = name || "";
-  }
 }

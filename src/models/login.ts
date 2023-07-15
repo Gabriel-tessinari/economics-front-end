@@ -1,9 +1,4 @@
-export default class Login {
+export default interface Login {
   email: string;
   password: string;
-
-  constructor(email?: string, password?: string) {
-    this.email = email || '';
-    this.password = password || '';
-  }
 }
