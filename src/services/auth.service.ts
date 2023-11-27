@@ -27,7 +27,7 @@ const mockService = {
 
     let response: any = await api().get(url);
 
-    return response.data[0]?.email == email;
+    return (response.data[0]?.email == email && response.data[0]?.name == token);
   }
 }
 
