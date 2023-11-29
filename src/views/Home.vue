@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { shared } from '../stores/shared.store';
+import { reactive } from 'vue';
 
 const accountSearch = ref('');
 const accounts = ref([
@@ -12,6 +13,8 @@ const selectedAccount = ref({ name: 'Selecione uma conta', total: 0 });
 const today = ref(new Date());
 const month = ref(shared.getMonthById(today.value.getMonth()+1));
 const year = ref(today.value.getFullYear());
+const transactions = ref<any[]>([]);
+const data = reactive({ gain: 0, loss: 0 });
 
 function search() {
   if(accountSearch.value == '') filteredAccounts.value = accounts.value;
@@ -25,6 +28,17 @@ function selectAccount(account: any) {
 }
 
 function loadTransactions() {
+  transactions.value = [
+    {id: 'nov01', title: 'Compras', description: 'Compras do mês', total: 50.50, isGain: false},
+    {id: 'nov02', title: 'Salário', description: '', total: 3000, isGain: true}
+  ];
+
+  data.gain = 0;
+  data.loss = 0;
+
+  transactions.value.forEach(item => {
+    item.isGain ? data.gain += item.total : data.loss += item.total;
+  });
   console.log(`Implementar transactionService.getByAccountAndDate(${selectedAccount.value.name}, ${today.value.getMonth()+1})`)
 }
 </script>
@@ -53,19 +67,27 @@ function loadTransactions() {
         <div class="chat-summary d-flex flex-row">
           <div class="out bg-red">
             <span class="material-symbols-outlined mr-2">thumb_down</span>
-            R$100,00
+            {{ shared.maskReal(data.loss) }}
           </div>
           <div class="in bg-green">
-            R$20,00
+            {{ shared.maskReal(data.gain) }}
             <span class="material-symbols-outlined ml-2">thumb_up</span>
           </div>
         </div>
       </div>
-      <div class="chat-body bg-purple h-100">
+      <div class="chat-body h-100">
         <div class="chat-date">
           <v-chip variant="outlined">
             {{ month + ' ' + year }}
           </v-chip>
+        </div>
+        <div class="chat-message" v-for="item in transactions" :class="{'gain': item.isGain}">
+          <div class="w-100 d-flex">
+            <div class="message-title">{{ item.title }}</div>
+            <v-spacer style="min-width: 24px;"></v-spacer>
+            <div class="message-total">{{ shared.maskReal(item.total) }}</div>
+          </div>
+          <div class="message-description">{{ item.description }}</div>
         </div>
       </div>
     </v-card>
@@ -136,9 +158,38 @@ function loadTransactions() {
   }
 }
 
-.chat-date {
+.chat-body {
   display: flex;
-  justify-content: center;
-  padding: 12px;
+  flex-direction: column;
+  
+  .chat-date {
+    display: flex;
+    justify-content: center;
+    padding: 12px;
+  }
+  
+  .chat-message {
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    background-color: #ef5350;
+    margin: 0 35px;
+    margin-bottom: 8px;
+    padding: 15px;
+    border-radius: 12px;
+    max-width: 75%;
+    width: fit-content;
+    font-weight: 300;
+  
+    &.gain {
+      background-color: #66bb6a;
+      align-self: end;
+    }
+
+    .message-description {
+      width: 100%;
+    }
+  }
 }
+
 </style>../stores/shared.store
