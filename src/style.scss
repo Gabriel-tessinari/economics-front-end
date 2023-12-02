@@ -34,6 +34,12 @@ body {
   }
 }
 
-.v-btn:disabled {
-  cursor: not-allowed !important;
+.v-btn {
+  &:disabled {
+    cursor: not-allowed !important;
+  }
+
+  &:hover {
+    background-color: rgb(var(--v-theme-primary));;
+  }
 }

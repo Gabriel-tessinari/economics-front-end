@@ -33,6 +33,10 @@ function search() {
 function selectAccount(account: Account) {
   emit('select', account);
 }
+
+function isUpToDate(account: Account) {
+  return account.currentMonthData >= new Date().getMonth() + 1;
+}
 </script>
 
 <template>
@@ -44,7 +48,7 @@ function selectAccount(account: Account) {
     </div>
     <div class="account" v-for="account in filteredAccounts" @click="selectAccount(account)">
       <div class="d-flex justify-space-between">
-        <p class="name">{{ account.name }}</p>
+        <p class="name">{{ (isUpToDate(account) ? '' : '* ') + account.name }}</p>
         <p class="total">{{ shared.maskReal(account.total) }}</p>
       </div>
       <p class="description">{{ account.description }}</p>

@@ -14,6 +14,8 @@ const customThemeColors: ThemeDefinition = {
     'text-color': colors.shades.white,
     primary: colors.orange.darken1,
     secondary: colors.orange.lighten5,
+    'loss': colors.red.lighten1,
+    'gain': colors.green.lighten1
   }
 }
 
