@@ -3,11 +3,10 @@ import { ref, reactive } from 'vue';
 import { shared } from '../stores/shared.store';
 import Account from '../models/account';
 import AccountList from '../components/home/AccountList.vue';
+import { onMounted } from 'vue';
+import accountService from '../services/account.service';
 
-const accounts = ref<Account[]>([
-  {id: 1, name: 'Conta 1', total: 5.2},
-  {id: 2, name: 'Conta 2', total: -100}
-]);
+const accounts = ref<Account[]>([]);
 
 const selectedAccount = ref({ name: 'Selecione uma conta', total: 0 });
 const today = ref(new Date());
@@ -15,6 +14,16 @@ const month = ref(shared.getMonthById(today.value.getMonth()+1));
 const year = ref(today.value.getFullYear());
 const transactions = ref<any[]>([]);
 const data = reactive({ gain: 0, loss: 0 });
+
+onMounted(() => {
+  getAccounts();
+});
+
+function getAccounts() {
+  accountService.findAll().then(response => {
+    accounts.value = response;
+  });
+}
 
 function selectAccount(account: any) {
   selectedAccount.value = account;

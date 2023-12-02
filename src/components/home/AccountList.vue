@@ -27,7 +27,7 @@ watch(() => props.accounts, () => {
 function search() {
   if(accountSearch.value == '') filteredAccounts.value = props.accounts || [];
   else filteredAccounts.value = props.accounts?.filter(account => 
-    account.name.toLowerCase().includes(accountSearch.value.toLowerCase())) || [];  
+    account.name.toLowerCase().trim().includes(accountSearch.value.toLowerCase().trim())) || [];  
 }
 
 function selectAccount(account: Account) {
@@ -42,10 +42,12 @@ function selectAccount(account: Account) {
       v-on:keyup="search()">
       </v-text-field>
     </div>
-    <div class="account d-flex flex-column pa-5" v-for="account in filteredAccounts"
-    @click="selectAccount(account)">
-      <p class="name">{{ account.name }}</p>
-      <p class="total">{{ shared.maskReal(account.total) }}</p>
+    <div class="account" v-for="account in filteredAccounts" @click="selectAccount(account)">
+      <div class="d-flex justify-space-between">
+        <p class="name">{{ account.name }}</p>
+        <p class="total">{{ shared.maskReal(account.total) }}</p>
+      </div>
+      <p class="description">{{ account.description }}</p>
     </div>
   </v-card>
 </template>
@@ -54,22 +56,31 @@ function selectAccount(account: Account) {
 .account {
   border-bottom: 1px solid rgb(var(--v-theme-text-color));
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
   font-weight: 300;
   height: 90px;
   max-width: 100%;
+  padding: 20px;
   width: 100%;
 
   .name {
     display: flex;
     flex-wrap: nowrap;
     font-size: larger;
+    font-weight: 700;
+    margin-right: 12px;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   .total {
     display: flex;
-    justify-content: end;
+    align-items: flex-end;
+  }
+
+  .description {
+    overflow: hidden;
   }
 
   &:hover {
