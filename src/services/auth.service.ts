@@ -31,4 +31,4 @@ const mockService = {
   }
 }
 
-export default import.meta.env.VITE_MOCK ? mockService : service;
+export default import.meta.env.VITE_MOCK === 'true' ? mockService : service;

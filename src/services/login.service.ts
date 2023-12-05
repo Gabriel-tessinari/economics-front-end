@@ -2,7 +2,7 @@ import Login from '../models/login';
 import { loginStore } from '../stores/login.store';
 import api from './_base';
 
-const route = '/login';
+const route = 'users/login';
 
 const service = {
   async login(data: Login) {
@@ -31,4 +31,4 @@ const mockService = {
   }
 }
 
-export default import.meta.env.VITE_MOCK ? mockService : service;
+export default import.meta.env.VITE_MOCK === 'true' ? mockService : service;

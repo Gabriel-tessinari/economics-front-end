@@ -35,10 +35,8 @@ function login() {
 
 <template>
   <main class="d-flex align-center justify-center">
-    <v-card variant="tonal" class="bg-background-lighten" width="25vw">
-      <v-card-title color="primary">
-        Login
-      </v-card-title>
+    <v-card variant="tonal" class="bg-text-color" width="25vw">
+      <v-card-title>Login</v-card-title>
       <v-card-text>
         <v-form>
           <v-text-field v-model="validation.email.$model" label="E-mail" 
@@ -52,7 +50,7 @@ function login() {
         </v-form>
       </v-card-text>
       <v-card-actions class="justify-end pa-4 pt-0">
-      <v-btn variant="outlined" color="primary" @click="login()" :disabled="validation.$invalid">
+      <v-btn variant="outlined" @click="login()" :disabled="validation.$invalid">
         Confirmar
       </v-btn>
     </v-card-actions>
@@ -61,11 +59,7 @@ function login() {
 </template>
 
 <style scoped lang="scss">
-.v-card-title {
-  color: rgb(var(--v-theme-primary));
-}
 .v-text-field {
   margin-top: .5rem;
-  color: rgb(var(--v-theme-primary));
 }
 </style>
